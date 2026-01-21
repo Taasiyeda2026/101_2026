@@ -1479,8 +1479,10 @@ async function generatePDF() {
     URL.revokeObjectURL(url);
     
   } catch (error) {
-    console.error('Error generating PDF:', error);
-    alert('שגיאה בהפקת PDF. אנא נסה שוב.');
+    const errMsg = error instanceof Error ? error.message : String(error);
+    const errStack = error instanceof Error ? error.stack : '';
+    console.error('Error generating PDF:', errMsg, errStack);
+    alert('שגיאה בהפקת PDF: ' + errMsg);
   }
 }
 
