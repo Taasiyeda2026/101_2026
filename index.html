@@ -1189,15 +1189,25 @@ function formatHebrewDate(dateStr) {
 }
 
 async function generatePDF() {
-  const { PDFDocument, rgb, StandardFonts } = PDFLib;
+  const { PDFDocument, rgb } = PDFLib;
   
   try {
     const formUrl = 'attached_assets/tofes-101_1769026021658.pdf';
-    const existingPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer());
+    const fontUrl = 'attached_assets/Heebo-Regular.ttf';
+    
+    const [existingPdfBytes, fontBytes] = await Promise.all([
+      fetch(formUrl).then(res => res.arrayBuffer()),
+      fetch(fontUrl).then(res => res.arrayBuffer())
+    ]);
     
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    
+    if (typeof fontkit === 'undefined') {
+      throw new Error('Fontkit not loaded');
+    }
+    pdfDoc.registerFontkit(fontkit);
+    
+    const hebrewFont = await pdfDoc.embedFont(fontBytes, { subset: true });
     
     const pages = pdfDoc.getPages();
     const page1 = pages[0];
@@ -1209,16 +1219,21 @@ async function generatePDF() {
     const smallFont = 7;
     const checkMark = 'X';
     
+    function reverseHebrew(text) {
+      if (!text) return '';
+      return String(text).split('').reverse().join('');
+    }
+    
     function drawTextOnPage(page, text, x, y, options = {}) {
       if (!text) return;
-      const font = options.bold ? helveticaBold : helveticaFont;
       const size = options.size || fontSize;
       const pageHeight = page === page1 ? height1 : height2;
-      page.drawText(String(text), {
+      const displayText = reverseHebrew(text);
+      page.drawText(displayText, {
         x: x,
         y: pageHeight - y,
         size: size,
-        font: font,
+        font: hebrewFont,
         color: rgb(0, 0, 0),
       });
     }
@@ -1229,7 +1244,7 @@ async function generatePDF() {
         x: x,
         y: pageHeight - y,
         size: 10,
-        font: helveticaBold,
+        font: hebrewFont,
         color: rgb(0, 0, 0),
       });
     }
