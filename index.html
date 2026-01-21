@@ -1,112 +1,1270 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<title>טופס 101 מקוון – שנת מס 2026</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>טופס 101 - כרטיס עובד ובקשה להקלה במס</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
-body { font-family: Heebo, Arial, sans-serif; background:#e5e7eb; padding:24px }
-.container { max-width:900px; margin:auto; background:#fff; padding:32px; border:2px solid #111827 }
-label{ font-weight:600; font-size:13px; display:block; margin-top:12px }
-input,select{ width:100%; padding:6px; font-size:13px; margin-top:4px }
-.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px }
-button{ margin-top:24px; padding:10px 18px; font-weight:700; background:#1f4bd8; color:#fff; border:none; border-radius:6px; cursor:pointer }
-canvas{ border:1px solid #111827; background:#fff }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Heebo', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.app-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  background: white;
+  border-radius: 16px 16px 0 0;
+  padding: 24px;
+  text-align: center;
+  border-bottom: 3px solid #667eea;
+}
+
+.header h1 {
+  color: #1a1a2e;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: #666;
+  font-size: 14px;
+}
+
+.form-container {
+  background: white;
+  border-radius: 0 0 16px 16px;
+  padding: 24px;
+}
+
+.section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-right: 4px solid #667eea;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title .icon {
+  width: 28px;
+  height: 28px;
+  background: #667eea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.radio-option:hover {
+  border-color: #667eea;
+}
+
+.radio-option input {
+  accent-color: #667eea;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.checkbox-option:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.checkbox-option input {
+  accent-color: #667eea;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.children-container {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.child-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto auto auto;
+  gap: 12px;
+  align-items: end;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.child-row input {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.add-child-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.add-child-btn:hover {
+  background: #5a6fd6;
+}
+
+.remove-child-btn {
+  background: #ff4757;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signature-section {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.signature-canvas {
+  border: 2px dashed #667eea;
+  border-radius: 8px;
+  background: #fafafa;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.signature-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.clear-btn {
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.declaration-box {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.submit-section {
+  text-align: center;
+  padding: 24px;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 16px 48px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.step {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #666;
+  font-size: 14px;
+}
+
+.step.active {
+  background: #667eea;
+  color: white;
+}
+
+.step.completed {
+  background: #4caf50;
+  color: white;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.nav-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn.prev {
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  color: #444;
+}
+
+.nav-btn.next {
+  background: #667eea;
+  border: none;
+  color: white;
+}
+
+.form-step {
+  display: none;
+}
+
+.form-step.active {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .child-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
-
 <body>
-<div class="container">
 
-<h2>טופס 101 – שנת מס 2026</h2>
-
-<h3>פרטי עובד</h3>
-<div class="grid">
-  <div>
-    <label>שם מלא</label>
-    <input id="fullName">
+<div class="app-container">
+  <div class="header">
+    <h1>טופס 101 - כרטיס עובד</h1>
+    <p>ובקשה להקלה ולתיאום מס על ידי המעסיק | לפי תקנות מס הכנסה (ניכוי ממשכורת ומשכר עבודה), התשנ"ג-1993</p>
   </div>
-  <div>
-    <label>תעודת זהות</label>
-    <input id="idNumber">
+  
+  <div class="form-container">
+    <div class="step-indicator">
+      <div class="step active" id="step1">1</div>
+      <div class="step" id="step2">2</div>
+      <div class="step" id="step3">3</div>
+      <div class="step" id="step4">4</div>
+      <div class="step" id="step5">5</div>
+    </div>
+
+    <form id="form101">
+      
+      <div class="form-step active" id="formStep1">
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">א</span>
+            פרטי המעסיק
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>שם המעסיק</label>
+              <input type="text" id="employerName">
+            </div>
+            <div class="form-group">
+              <label>כתובת</label>
+              <input type="text" id="employerAddress">
+            </div>
+            <div class="form-group">
+              <label>מספר טלפון</label>
+              <input type="tel" id="employerPhone">
+            </div>
+            <div class="form-group">
+              <label>מספר תיק ניכויים</label>
+              <input type="text" id="employerTikNikuyim" maxlength="9" placeholder="9 ספרות">
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">ב</span>
+            פרטי העובד/ת
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>מספר תעודת זהות (9 ספרות)</label>
+              <input type="text" id="idNumber" maxlength="9" pattern="[0-9]{9}">
+            </div>
+            <div class="form-group">
+              <label>שם משפחה</label>
+              <input type="text" id="lastName">
+            </div>
+            <div class="form-group">
+              <label>שם פרטי</label>
+              <input type="text" id="firstName">
+            </div>
+            <div class="form-group">
+              <label>תאריך לידה</label>
+              <input type="date" id="birthDate">
+            </div>
+            <div class="form-group">
+              <label>תאריך עלייה (אם רלוונטי)</label>
+              <input type="date" id="aliyaDate">
+            </div>
+            <div class="form-group">
+              <label>מספר דרכון (למי שאין ת.ז.)</label>
+              <input type="text" id="passportNumber">
+            </div>
+          </div>
+          
+          <div class="form-grid" style="margin-top: 16px;">
+            <div class="form-group">
+              <label>רחוב/שכונה</label>
+              <input type="text" id="street">
+            </div>
+            <div class="form-group">
+              <label>מספר בית</label>
+              <input type="text" id="houseNumber">
+            </div>
+            <div class="form-group">
+              <label>עיר/ישוב</label>
+              <input type="text" id="city">
+            </div>
+            <div class="form-group">
+              <label>מיקוד</label>
+              <input type="text" id="zipCode" maxlength="7">
+            </div>
+            <div class="form-group">
+              <label>טלפון</label>
+              <input type="tel" id="phone">
+            </div>
+            <div class="form-group">
+              <label>טלפון נייד</label>
+              <input type="tel" id="mobile">
+            </div>
+            <div class="form-group full-width">
+              <label>כתובת דואר אלקטרוני</label>
+              <input type="email" id="email">
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 16px;">
+            <div class="form-group">
+              <label>מין</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="gender" value="male"> זכר
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="gender" value="female"> נקבה
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>מצב משפחתי</label>
+              <select id="maritalStatus">
+                <option value="">בחר...</option>
+                <option value="single">רווק/ה</option>
+                <option value="married">נשוי/אה</option>
+                <option value="divorced">גרוש/ה</option>
+                <option value="widowed">אלמן/ה</option>
+                <option value="separated">פרוד/ה</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>תושב ישראל</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="israelResident" value="yes"> כן
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="israelResident" value="no"> לא
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 16px;">
+            <div class="form-group">
+              <label>חבר קיבוץ/מושב שיתופי</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="kibbutzMember" value="no"> לא
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kibbutzMember" value="yesTransfer"> כן, הכנסות מועברות לקיבוץ
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kibbutzMember" value="yesNoTransfer"> כן, הכנסות אינן מועברות לקיבוץ
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>חבר בקופת חולים</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="kupat" value="no"> לא
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kupat" value="yes"> כן
+                </label>
+              </div>
+            </div>
+            <div class="form-group" id="kupatNameGroup" style="display: none;">
+              <label>שם קופת החולים</label>
+              <input type="text" id="kupatName">
+            </div>
+          </div>
+        </div>
+        
+        <div class="nav-buttons">
+          <div></div>
+          <button type="button" class="nav-btn next" onclick="nextStep(1)">המשך →</button>
+        </div>
+      </div>
+
+      <div class="form-step" id="formStep2">
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">ג</span>
+            פרטים על ילדים (שבשנת המס טרם מלאו להם 19 שנה)
+          </div>
+          <div class="children-container" id="childrenContainer">
+            <div class="child-row" data-child="1">
+              <div class="form-group">
+                <label>שם הילד</label>
+                <input type="text" name="childName[]">
+              </div>
+              <div class="form-group">
+                <label>מספר זהות</label>
+                <input type="text" name="childId[]" maxlength="9">
+              </div>
+              <div class="form-group">
+                <label>תאריך לידה</label>
+                <input type="date" name="childBirth[]">
+              </div>
+              <div class="form-group">
+                <label>בחזקתי</label>
+                <input type="checkbox" name="childCustody[]">
+              </div>
+              <div class="form-group">
+                <label>קצבה מב"ל</label>
+                <input type="checkbox" name="childAllowance[]">
+              </div>
+              <button type="button" class="remove-child-btn" onclick="removeChild(this)">×</button>
+            </div>
+          </div>
+          <button type="button" class="add-child-btn" onclick="addChild()">+ הוסף ילד</button>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">ד</span>
+            פרטים על הכנסות ממעסיק זה
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>תאריך תחילת העבודה</label>
+              <input type="date" id="workStartDate">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top: 16px;">
+            <label>סוג ההכנסה ממעסיק זה:</label>
+            <div class="radio-group" style="margin-top: 8px;">
+              <label class="radio-option">
+                <input type="radio" name="incomeType" value="monthly"> משכורת חודש
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="incomeType" value="additional"> משכורת בעד משרה נוספת
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="incomeType" value="partial"> משכורת חלקית
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="incomeType" value="daily"> שכר עבודה (עובד יומי)
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="incomeType" value="pension"> קצבה
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="incomeType" value="scholarship"> מלגה
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="nav-buttons">
+          <button type="button" class="nav-btn prev" onclick="prevStep(2)">← חזור</button>
+          <button type="button" class="nav-btn next" onclick="nextStep(2)">המשך →</button>
+        </div>
+      </div>
+
+      <div class="form-step" id="formStep3">
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">ה</span>
+            פרטים על הכנסות אחרות
+          </div>
+          <div class="checkbox-group">
+            <label class="checkbox-option">
+              <input type="radio" name="otherIncome" value="none" checked>
+              אין לי הכנסות אחרות ממשכורת, מקצבה וממלגה
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="otherIncome" value="yes">
+              יש לי הכנסות אחרות
+            </label>
+          </div>
+          
+          <div id="otherIncomeDetails" style="display: none; margin-top: 16px;">
+            <div class="checkbox-group">
+              <label class="checkbox-option">
+                <input type="checkbox" name="otherIncomeType" value="monthly"> משכורת חודש
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="otherIncomeType" value="additional"> משכורת בעד משרה נוספת
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="otherIncomeType" value="partial"> משכורת חלקית
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="otherIncomeType" value="daily"> שכר עבודה (עובד יומי)
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="otherIncomeType" value="pension"> קצבה
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="otherIncomeType" value="scholarship"> מלגה
+              </label>
+            </div>
+            
+            <div class="checkbox-group" style="margin-top: 16px;">
+              <label class="checkbox-option">
+                <input type="checkbox" id="requestCredits">
+                אבקש לקבל נקודות זיכוי ומדרגות מס כנגד הכנסתי זו. איני מקבל/ת אותן בהכנסה אחרת
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" id="receiveCreditsElsewhere">
+                אני מקבל/ת נקודות זיכוי ומדרגות מס בהכנסה אחרת ועל כן איני זכאי/ת להן כנגד הכנסה זו
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">ו</span>
+            פרטים על בן/בת הזוג
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>מספר תעודת זהות (9 ספרות)</label>
+              <input type="text" id="spouseId" maxlength="9">
+            </div>
+            <div class="form-group">
+              <label>שם משפחה</label>
+              <input type="text" id="spouseLastName">
+            </div>
+            <div class="form-group">
+              <label>שם פרטי</label>
+              <input type="text" id="spouseFirstName">
+            </div>
+            <div class="form-group">
+              <label>תאריך לידה</label>
+              <input type="date" id="spouseBirthDate">
+            </div>
+            <div class="form-group">
+              <label>תאריך עלייה (אם רלוונטי)</label>
+              <input type="date" id="spouseAliyaDate">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top: 16px;">
+            <label>הכנסות בן/בת הזוג</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="spouseIncome" value="none"> אין לבן/בת הזוג כל הכנסה
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="spouseIncome" value="work"> יש הכנסה מעבודה/קצבה/עסק
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="spouseIncome" value="other"> יש הכנסה אחרת
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="nav-buttons">
+          <button type="button" class="nav-btn prev" onclick="prevStep(3)">← חזור</button>
+          <button type="button" class="nav-btn next" onclick="nextStep(3)">המשך →</button>
+        </div>
+      </div>
+
+      <div class="form-step" id="formStep4">
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">ח</span>
+            בקשה לפטור או זיכוי ממס
+          </div>
+          <div class="checkbox-group">
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit1"> 1. אני תושב/ת ישראל
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit2a"> 2א. אני נכה 100% / עיוור/ת לצמיתות
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit2b"> 2ב. אני מקבל/ת תגמול חודשי לפי חוק הנכים
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit3"> 3. אני תושב/ת קבוע/ה בישוב מזכה
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit4"> 4. אני עולה חדש/ה
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit5"> 5. בגין בן/בת זוגי המתגורר/ת עימי ואין לו/לה הכנסות
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit6"> 6. אני הורה במשפחה חד הורית החי בנפרד
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit7"> 7. בגין ילדיי שבחזקתי
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit8"> 8. בגין ילדיי
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit9"> 9. אני הורה יחיד לילדיי שבחזקתי
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit10"> 10. בגין ילדיי שאינם בחזקתי ואני משתתף/ת בכלכלתם
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit11"> 11. אני הורה לילדים עם מוגבלות
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit12"> 12. בגין מזונות לבן/בת זוגי לשעבר
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit13"> 13. מלאו לי או לבן/בת זוגי 16 שנים וטרם מלאו 18 שנים
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit14"> 14. אני חייל/ת משוחרר/ת / שירתתי בשירות לאומי
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit15"> 15. בגין סיום לימודים לתואר אקדמי / התמחות / לימודי מקצוע
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="credit16"> 16. שירתתי כלוחם/ת מילואים
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">ט</span>
+            בקשה לתיאום מס
+          </div>
+          <div class="checkbox-group">
+            <label class="checkbox-option">
+              <input type="checkbox" id="taxAdj1"> 1. לא היתה לי הכנסה מתחילת שנת המס עד לתחילת עבודתי אצל מעסיק זה
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="taxAdj2"> 2. יש לי הכנסות נוספות ממשכורת
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="taxAdj3"> 3. פקיד השומה אישר תיאום לפי אישור מצורף
+            </label>
+          </div>
+        </div>
+        
+        <div class="nav-buttons">
+          <button type="button" class="nav-btn prev" onclick="prevStep(4)">← חזור</button>
+          <button type="button" class="nav-btn next" onclick="nextStep(4)">המשך →</button>
+        </div>
+      </div>
+
+      <div class="form-step" id="formStep5">
+        <div class="section">
+          <div class="section-title">
+            <span class="icon">י</span>
+            הצהרה וחתימה
+          </div>
+          
+          <div class="declaration-box">
+            <strong>אני מצהיר/ה כי הפרטים שמסרתי בטופס זה הינם מלאים ונכונים.</strong><br><br>
+            ידוע לי כי השמטה או מסירת פרטים לא נכונים הינה עבירה על פקודת מס הכנסה.<br><br>
+            אני מתחייב/ת להודיע למעסיק על כל שינוי שיחול בפרטיי האישיים ובפרטים דלעיל תוך שבוע ימים מתאריך השינוי.
+          </div>
+
+          <div class="signature-section">
+            <label style="font-weight: 600; margin-bottom: 12px; display: block;">חתימה דיגיטלית</label>
+            <p class="note" style="margin-bottom: 12px;">חתום/י באמצעות העכבר או האצבע. החתימה תכלול חותמת זמן אוטומטית בהתאם לתקנות רשות המסים.</p>
+            <canvas id="signatureCanvas" class="signature-canvas" width="400" height="150"></canvas>
+            <div class="signature-buttons">
+              <button type="button" class="clear-btn" onclick="clearSignature()">נקה חתימה</button>
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 20px;">
+            <div class="form-group">
+              <label>תאריך החתימה</label>
+              <input type="date" id="signatureDate" readonly>
+            </div>
+          </div>
+        </div>
+        
+        <div class="nav-buttons">
+          <button type="button" class="nav-btn prev" onclick="prevStep(5)">← חזור</button>
+        </div>
+
+        <div class="submit-section">
+          <button type="button" class="submit-btn" onclick="generatePDF()">
+            הפקת טופס 101 חתום (PDF)
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
-  <div>
-    <label>תאריך לידה</label>
-    <input type="date" id="birthDate">
-  </div>
-  <div>
-    <label>טלפון</label>
-    <input id="phone">
-  </div>
-</div>
-
-<h3 style="margin-top:32px">הצהרה</h3>
-<p style="font-size:14px">
-אני מצהיר/ה בזאת כי כל הפרטים שמסרתי בטופס זה נכונים ומלאים,
-ואני מתחייב/ת להודיע על כל שינוי.
-</p>
-
-<h3>חתימה</h3>
-<canvas id="signature" width="400" height="120"></canvas>
-<p style="font-size:12px">חתימה עם עכבר / אצבע</p>
-
-<button onclick="generatePDF()">סיום, חתימה והפקת PDF</button>
-
 </div>
 
 <script>
-/* חתימה */
-const canvas = document.getElementById('signature');
+let currentStep = 1;
+const totalSteps = 5;
+
+function updateStepIndicator() {
+  for (let i = 1; i <= totalSteps; i++) {
+    const stepEl = document.getElementById('step' + i);
+    stepEl.classList.remove('active', 'completed');
+    if (i < currentStep) {
+      stepEl.classList.add('completed');
+      stepEl.textContent = '✓';
+    } else if (i === currentStep) {
+      stepEl.classList.add('active');
+      stepEl.textContent = i;
+    } else {
+      stepEl.textContent = i;
+    }
+  }
+}
+
+function showStep(step) {
+  document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+  document.getElementById('formStep' + step).classList.add('active');
+  updateStepIndicator();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(current) {
+  if (current < totalSteps) {
+    currentStep = current + 1;
+    showStep(currentStep);
+  }
+}
+
+function prevStep(current) {
+  if (current > 1) {
+    currentStep = current - 1;
+    showStep(currentStep);
+  }
+}
+
+document.querySelectorAll('input[name="kupat"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    document.getElementById('kupatNameGroup').style.display = 
+      this.value === 'yes' ? 'block' : 'none';
+  });
+});
+
+document.querySelectorAll('input[name="otherIncome"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    document.getElementById('otherIncomeDetails').style.display = 
+      this.value === 'yes' ? 'block' : 'none';
+  });
+});
+
+let childCount = 1;
+function addChild() {
+  childCount++;
+  const container = document.getElementById('childrenContainer');
+  const newRow = document.createElement('div');
+  newRow.className = 'child-row';
+  newRow.dataset.child = childCount;
+  newRow.innerHTML = `
+    <div class="form-group">
+      <label>שם הילד</label>
+      <input type="text" name="childName[]">
+    </div>
+    <div class="form-group">
+      <label>מספר זהות</label>
+      <input type="text" name="childId[]" maxlength="9">
+    </div>
+    <div class="form-group">
+      <label>תאריך לידה</label>
+      <input type="date" name="childBirth[]">
+    </div>
+    <div class="form-group">
+      <label>בחזקתי</label>
+      <input type="checkbox" name="childCustody[]">
+    </div>
+    <div class="form-group">
+      <label>קצבה מב"ל</label>
+      <input type="checkbox" name="childAllowance[]">
+    </div>
+    <button type="button" class="remove-child-btn" onclick="removeChild(this)">×</button>
+  `;
+  container.appendChild(newRow);
+}
+
+function removeChild(btn) {
+  if (document.querySelectorAll('.child-row').length > 1) {
+    btn.closest('.child-row').remove();
+  }
+}
+
+const canvas = document.getElementById('signatureCanvas');
 const ctx = canvas.getContext('2d');
-let drawing = false;
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
 
-canvas.addEventListener('mousedown', () => drawing = true);
-canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mouseout', stopDrawing);
 
-function draw(e){
-  if(!drawing) return;
+canvas.addEventListener('touchstart', handleTouchStart);
+canvas.addEventListener('touchmove', handleTouchMove);
+canvas.addEventListener('touchend', stopDrawing);
+
+function startDrawing(e) {
+  isDrawing = true;
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+}
+
+function draw(e) {
+  if (!isDrawing) return;
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.strokeStyle = '#1a1a2e';
   ctx.lineWidth = 2;
   ctx.lineCap = 'round';
-  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.lineJoin = 'round';
   ctx.stroke();
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+}
+
+function handleTouchStart(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  isDrawing = true;
+  lastX = touch.clientX - rect.left;
+  lastY = touch.clientY - rect.top;
+}
+
+function handleTouchMove(e) {
+  e.preventDefault();
+  if (!isDrawing) return;
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+  
   ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(x, y);
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+  
+  lastX = x;
+  lastY = y;
 }
 
-/* יצוא PDF */
-function generatePDF(){
+function stopDrawing() {
+  isDrawing = false;
+}
+
+function clearSignature() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+document.getElementById('signatureDate').value = new Date().toISOString().split('T')[0];
+
+function formatHebrewDate(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('he-IL');
+}
+
+function generatePDF() {
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-
-  pdf.setFont("Helvetica");
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  
+  const pageWidth = 210;
+  const pageHeight = 297;
+  const margin = 15;
+  let y = margin;
+  
+  pdf.setFont('Helvetica');
+  
+  pdf.setFontSize(10);
+  pdf.setTextColor(100);
+  pdf.text('0101/130', margin, y);
+  pdf.text('1 :2 (daf)', pageWidth - margin, y, { align: 'right' });
+  
+  y += 8;
   pdf.setFontSize(14);
-  pdf.text("טופס 101 – שנת מס 2026", 105, 15, { align: "center" });
-
-  pdf.setFontSize(11);
-  pdf.text("שם מלא: " + document.getElementById('fullName').value, 20, 35);
-  pdf.text("תעודת זהות: " + document.getElementById('idNumber').value, 20, 45);
-  pdf.text("תאריך לידה: " + document.getElementById('birthDate').value, 20, 55);
-  pdf.text("טלפון: " + document.getElementById('phone').value, 20, 65);
-
-  pdf.text(
-    "הצהרה: אני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומלאים.",
-    20, 85
-  );
-
-  const imgData = canvas.toDataURL("image/png");
-  pdf.addImage(imgData, 'PNG', 20, 95, 80, 30);
-
-  const today = new Date().toLocaleDateString('he-IL');
-  pdf.text("תאריך חתימה: " + today, 20, 135);
-
-  pdf.save("101_2026_" + document.getElementById('idNumber').value + ".pdf");
+  pdf.setTextColor(0);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Tofes 101 - Kartis Oved', pageWidth / 2, y, { align: 'center' });
+  
+  y += 6;
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'normal');
+  pdf.text('Uvakasha Lehakala Uletieum Mas Al Yedei Hamaasik', pageWidth / 2, y, { align: 'center' });
+  
+  y += 5;
+  pdf.setFontSize(8);
+  pdf.text('Lefi Takanot Mas Hachnasa (Nikui Mimaskort), Hatashna"g 1993', pageWidth / 2, y, { align: 'center' });
+  
+  y += 10;
+  const taxYear = new Date().getFullYear();
+  pdf.setFontSize(12);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Shnat Hamas: ' + taxYear, pageWidth / 2, y, { align: 'center' });
+  
+  y += 12;
+  pdf.setFillColor(240, 240, 240);
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 20, 'F');
+  pdf.setDrawColor(0);
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 20);
+  
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('A. Pirtei Hamaasik', pageWidth - margin - 2, y, { align: 'right' });
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(9);
+  
+  const employerName = document.getElementById('employerName').value || '';
+  const employerAddress = document.getElementById('employerAddress').value || '';
+  const employerPhone = document.getElementById('employerPhone').value || '';
+  const employerTik = document.getElementById('employerTikNikuyim').value || '';
+  
+  pdf.text('Shem: ' + employerName, pageWidth - margin - 5, y, { align: 'right' });
+  pdf.text('Ktovet: ' + employerAddress, pageWidth / 2, y, { align: 'center' });
+  y += 5;
+  pdf.text('Telefon: ' + employerPhone, pageWidth - margin - 5, y, { align: 'right' });
+  pdf.text('Tik Nikuyim: ' + employerTik, pageWidth / 2, y, { align: 'center' });
+  
+  y += 12;
+  pdf.setFillColor(240, 240, 240);
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 35, 'F');
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 35);
+  
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('B. Pirtei Haoved', pageWidth - margin - 2, y, { align: 'right' });
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(9);
+  
+  const idNum = document.getElementById('idNumber').value || '';
+  const lastName = document.getElementById('lastName').value || '';
+  const firstName = document.getElementById('firstName').value || '';
+  const birthDate = formatHebrewDate(document.getElementById('birthDate').value);
+  const aliyaDate = formatHebrewDate(document.getElementById('aliyaDate').value);
+  
+  pdf.text('Mispar Zehut: ' + idNum, pageWidth - margin - 5, y, { align: 'right' });
+  pdf.text('Shem Mishpacha: ' + lastName, pageWidth / 2 + 20, y, { align: 'right' });
+  pdf.text('Shem Prati: ' + firstName, pageWidth / 2 - 20, y, { align: 'right' });
+  y += 5;
+  pdf.text('Taarich Leida: ' + birthDate, pageWidth - margin - 5, y, { align: 'right' });
+  pdf.text('Taarich Aliya: ' + aliyaDate, pageWidth / 2, y, { align: 'right' });
+  
+  y += 6;
+  const street = document.getElementById('street').value || '';
+  const houseNum = document.getElementById('houseNumber').value || '';
+  const city = document.getElementById('city').value || '';
+  const zipCode = document.getElementById('zipCode').value || '';
+  
+  pdf.text('Ktovet: ' + street + ' ' + houseNum + ', ' + city + ' ' + zipCode, pageWidth - margin - 5, y, { align: 'right' });
+  
+  y += 5;
+  const phone = document.getElementById('phone').value || '';
+  const mobile = document.getElementById('mobile').value || '';
+  const email = document.getElementById('email').value || '';
+  
+  pdf.text('Telefon: ' + phone + '  Nayad: ' + mobile, pageWidth - margin - 5, y, { align: 'right' });
+  y += 5;
+  pdf.text('Email: ' + email, pageWidth - margin - 5, y, { align: 'right' });
+  
+  y += 5;
+  const gender = document.querySelector('input[name="gender"]:checked');
+  const genderText = gender ? (gender.value === 'male' ? 'Zachar' : 'Nekeva') : '';
+  const marital = document.getElementById('maritalStatus').value || '';
+  const israelRes = document.querySelector('input[name="israelResident"]:checked');
+  const resText = israelRes ? (israelRes.value === 'yes' ? 'Ken' : 'Lo') : '';
+  
+  pdf.text('Min: ' + genderText + '  Matsav Mishpachti: ' + marital + '  Toshav Israel: ' + resText, pageWidth - margin - 5, y, { align: 'right' });
+  
+  y += 12;
+  pdf.setFillColor(240, 240, 240);
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25, 'F');
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25);
+  
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('G. Pirtim Al Yeladim (ad gil 19)', pageWidth - margin - 2, y, { align: 'right' });
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(8);
+  
+  const childNames = document.querySelectorAll('input[name="childName[]"]');
+  const childIds = document.querySelectorAll('input[name="childId[]"]');
+  const childBirths = document.querySelectorAll('input[name="childBirth[]"]');
+  const childCustody = document.querySelectorAll('input[name="childCustody[]"]');
+  
+  for (let i = 0; i < childNames.length && i < 4; i++) {
+    if (childNames[i].value) {
+      const custody = childCustody[i].checked ? '[V]' : '[ ]';
+      pdf.text(
+        (i + 1) + '. ' + childNames[i].value + ' | ID: ' + childIds[i].value + ' | ' + formatHebrewDate(childBirths[i].value) + ' | Bechezka: ' + custody,
+        pageWidth - margin - 5, y, { align: 'right' }
+      );
+      y += 4;
+    }
+  }
+  
+  y += 8;
+  pdf.setFillColor(240, 240, 240);
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 15, 'F');
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 15);
+  
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('D. Hachnasot Memaasik Ze', pageWidth - margin - 2, y, { align: 'right' });
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(9);
+  
+  const workStart = formatHebrewDate(document.getElementById('workStartDate').value);
+  const incomeType = document.querySelector('input[name="incomeType"]:checked');
+  const incomeTypeText = incomeType ? incomeType.value : '';
+  
+  pdf.text('Taarich Tchilat Avoda: ' + workStart + '  Sug Hachnasa: ' + incomeTypeText, pageWidth - margin - 5, y, { align: 'right' });
+  
+  y += 12;
+  pdf.setFillColor(255, 255, 200);
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25, 'F');
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25);
+  
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Y. Hatshara', pageWidth - margin - 2, y, { align: 'right' });
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(8);
+  pdf.text('Ani matshir/a ki hapratim shemasarti betofes ze heinam mele\'im venechonim.', pageWidth - margin - 5, y, { align: 'right' });
+  y += 4;
+  pdf.text('Yadua li ki hashmata o mesirat pratim lo nechonim heina avera al pkudat mas hachnasa.', pageWidth - margin - 5, y, { align: 'right' });
+  y += 4;
+  pdf.text('Ani mitchayev/et lehodia lemaasik al kol shinui bepratai toch shavua yamim.', pageWidth - margin - 5, y, { align: 'right' });
+  
+  y += 15;
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Chatima:', pageWidth - margin - 2, y, { align: 'right' });
+  
+  const signatureImg = canvas.toDataURL('image/png');
+  const signatureX = pageWidth - margin - 65;
+  y += 3;
+  
+  pdf.setDrawColor(100);
+  pdf.setFillColor(255, 255, 255);
+  pdf.rect(signatureX, y, 60, 25, 'FD');
+  pdf.addImage(signatureImg, 'PNG', signatureX + 2, y + 2, 56, 21);
+  
+  y += 28;
+  pdf.setFontSize(8);
+  pdf.setFont('Helvetica', 'normal');
+  const sigDate = document.getElementById('signatureDate').value;
+  const timestamp = new Date().toISOString();
+  pdf.text('Taarich: ' + formatHebrewDate(sigDate), pageWidth - margin - 5, y, { align: 'right' });
+  y += 4;
+  pdf.setFontSize(7);
+  pdf.setTextColor(100);
+  pdf.text('Chatima Digitalit - Timestamp: ' + timestamp, pageWidth - margin - 5, y, { align: 'right' });
+  pdf.text('Beteum Takanot Rashut Hamisim Lechatima Electronit', pageWidth - margin - 5, y + 3, { align: 'right' });
+  
+  y += 15;
+  pdf.setDrawColor(200);
+  pdf.line(margin, y, pageWidth - margin, y);
+  y += 5;
+  pdf.setFontSize(7);
+  pdf.setTextColor(120);
+  pdf.text('Tofes 101 - Meudkan 11.2025 - Agaf Bachir Technologiot Digitaliot Umeda, Rashut Hamisim', pageWidth / 2, y, { align: 'center' });
+  
+  const fileName = '101_' + taxYear + '_' + (idNum || 'unsigned') + '.pdf';
+  pdf.save(fileName);
 }
-</script>
 
+updateStepIndicator();
+</script>
 </body>
 </html>

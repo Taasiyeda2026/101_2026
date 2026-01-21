@@ -1,22 +1,46 @@
-# Form 101 - Tax Year 2026
+# טופס 101 - כרטיס עובד ובקשה להקלה במס
 
-## Overview
-A Hebrew tax form (טופס 101) for tax year 2026. This is a static HTML application that allows users to fill in employee details and generate a signed PDF document.
+## סקירה כללית
+מערכת מקוונת למילוי טופס 101 של רשות המסים - כרטיס עובד ובקשה להקלה ולתיאום מס.
+הטופס כולל ממשק משתמש מודרני עם אשף 5 שלבים, וביכולתו להפיק PDF ממולא עם חתימה דיגיטלית.
 
-## Project Structure
-- `index.html` - Main form page (copy of 101_2026.html for web serving)
-- `101_2026.html` - Original form file
-- `server.py` - Simple Python HTTP server for development
+## מבנה הפרויקט
+- `index.html` - הטופס הראשי עם ממשק המשתמש
+- `server.py` - שרת Python פשוט להגשת קבצים סטטיים
+- `101_2026.html` - קובץ הטופס המקורי (לגיבוי)
+- `attached_assets/` - קבצים מצורפים (PDF מקורי של רשות המסים)
 
-## Features
-- Employee details form (name, ID, birth date, phone)
-- Canvas-based signature pad
-- PDF generation using jsPDF library
+## שלבי הטופס
+1. **פרטי מעסיק ועובד** - שם, כתובת, ת.ז., פרטי קשר
+2. **ילדים והכנסות** - פרטי ילדים עד גיל 19, סוג ההכנסה ממעסיק
+3. **הכנסות אחרות ובן/בת זוג** - הכנסות נוספות, פרטי בן/בת הזוג
+4. **זיכויים ותיאום מס** - בקשות לפטור וזיכוי ממס
+5. **הצהרה וחתימה** - הצהרה רשמית וחתימה דיגיטלית
 
-## Running the Project
-The project runs as a static website served on port 5000.
+## תכונות
+- ממשק עברי מלא (RTL)
+- חתימה דיגיטלית על קנבס (עכבר/מגע)
+- חותמת זמן אוטומטית
+- הפקת PDF עם כל הנתונים
+- עיצוב מודרני ונגיש
+- תמיכה במובייל
 
-Development: `python server.py`
+## חתימה דיגיטלית
+החתימה הדיגיטלית במערכת זו כוללת:
+- חתימה גרפית על קנבס
+- חותמת זמן (timestamp) אוטומטית
+- תיעוד תאריך החתימה
 
-## Deployment
-Configured for static deployment - serves the HTML files directly.
+**הערה:** לחתימה דיגיטלית מאושרת לפי חוק חתימה אלקטרונית נדרשת תשתית PKI חיצונית.
+
+## הפעלה
+הפרויקט רץ על פורט 5000:
+```
+python server.py
+```
+
+## פריסה
+מוגדר לפריסה סטטית - מגיש קבצי HTML, CSS ו-JavaScript ישירות.
+
+## עדכון אחרון
+ינואר 2026
