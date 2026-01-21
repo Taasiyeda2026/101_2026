@@ -436,7 +436,7 @@ body {
             </div>
             <div class="form-group">
               <label>מספר תיק ניכויים / ח.פ / עמותה</label>
-              <input type="text" id="employerTikNikuyim" value="580210094" readonly>
+              <input type="text" id="employerTikNikuyim" value="9935176040" readonly>
             </div>
             <div class="form-group">
               <label>כתובת</label>
@@ -464,51 +464,43 @@ body {
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label>מספר תעודת זהות (9 ספרות)</label>
-              <input type="text" id="idNumber" maxlength="9" pattern="[0-9]{9}">
+              <label>מספר תעודת זהות (9 ספרות) *</label>
+              <input type="text" id="idNumber" maxlength="9" pattern="[0-9]{9}" required>
             </div>
             <div class="form-group">
-              <label>שם משפחה</label>
-              <input type="text" id="lastName">
+              <label>שם משפחה *</label>
+              <input type="text" id="lastName" required>
             </div>
             <div class="form-group">
-              <label>שם פרטי</label>
-              <input type="text" id="firstName">
+              <label>שם פרטי *</label>
+              <input type="text" id="firstName" required>
             </div>
             <div class="form-group">
-              <label>תאריך לידה</label>
-              <input type="date" id="birthDate">
-            </div>
-            <div class="form-group">
-              <label>תאריך עלייה (אם רלוונטי)</label>
-              <input type="date" id="aliyaDate">
-            </div>
-            <div class="form-group">
-              <label>מספר דרכון (למי שאין ת.ז.)</label>
-              <input type="text" id="passportNumber">
+              <label>תאריך לידה *</label>
+              <input type="date" id="birthDate" required>
             </div>
           </div>
           
           <div class="form-grid" style="margin-top: 16px;">
             <div class="form-group">
-              <label>רחוב/שכונה</label>
-              <input type="text" id="street">
+              <label>רחוב/שכונה *</label>
+              <input type="text" id="street" required>
             </div>
             <div class="form-group">
-              <label>מספר בית</label>
-              <input type="text" id="houseNumber">
+              <label>מספר בית *</label>
+              <input type="text" id="houseNumber" required>
             </div>
             <div class="form-group">
-              <label>עיר/ישוב</label>
-              <input type="text" id="city">
+              <label>עיר/ישוב *</label>
+              <input type="text" id="city" required>
             </div>
             <div class="form-group">
               <label>מיקוד</label>
               <input type="text" id="zipCode" maxlength="7">
             </div>
             <div class="form-group">
-              <label>טלפון</label>
-              <input type="tel" id="phone">
+              <label>טלפון *</label>
+              <input type="tel" id="phone" required>
             </div>
             <div class="form-group">
               <label>טלפון נייד</label>
@@ -522,10 +514,10 @@ body {
 
           <div class="form-grid" style="margin-top: 16px;">
             <div class="form-group">
-              <label>מין</label>
+              <label>מין *</label>
               <div class="radio-group">
                 <label class="radio-option">
-                  <input type="radio" name="gender" value="male"> זכר
+                  <input type="radio" name="gender" value="male" required> זכר
                 </label>
                 <label class="radio-option">
                   <input type="radio" name="gender" value="female"> נקבה
@@ -533,8 +525,8 @@ body {
               </div>
             </div>
             <div class="form-group">
-              <label>מצב משפחתי</label>
-              <select id="maritalStatus">
+              <label>מצב משפחתי *</label>
+              <select id="maritalStatus" required>
                 <option value="">בחר...</option>
                 <option value="single">רווק/ה</option>
                 <option value="married">נשוי/אה</option>
@@ -543,17 +535,6 @@ body {
                 <option value="separated">פרוד/ה</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>תושב ישראל</label>
-              <div class="radio-group">
-                <label class="radio-option">
-                  <input type="radio" name="israelResident" value="yes"> כן
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="israelResident" value="no"> לא
-                </label>
-              </div>
-            </div>
           </div>
 
           <div class="form-grid" style="margin-top: 16px;">
@@ -561,7 +542,7 @@ body {
               <label>חבר קיבוץ/מושב שיתופי</label>
               <div class="radio-group">
                 <label class="radio-option">
-                  <input type="radio" name="kibbutzMember" value="no"> לא
+                  <input type="radio" name="kibbutzMember" value="no" required> לא
                 </label>
                 <label class="radio-option">
                   <input type="radio" name="kibbutzMember" value="yesTransfer"> כן, הכנסות מועברות לקיבוץ
@@ -636,15 +617,15 @@ body {
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label>תאריך תחילת העבודה</label>
-              <input type="date" id="workStartDate">
+              <label>תאריך תחילת העבודה *</label>
+              <input type="date" id="workStartDate" required>
             </div>
           </div>
           <div class="form-group" style="margin-top: 16px;">
             <label>סוג ההכנסה ממעסיק זה:</label>
             <div class="radio-group" style="margin-top: 8px;">
               <label class="radio-option">
-                <input type="radio" name="incomeType" value="monthly"> משכורת חודש
+                <input type="radio" name="incomeType" value="monthly" required> משכורת חודש
               </label>
               <label class="radio-option">
                 <input type="radio" name="incomeType" value="additional"> משכורת בעד משרה נוספת
@@ -780,7 +761,7 @@ body {
           </div>
           <div class="checkbox-group">
             <label class="checkbox-option">
-              <input type="checkbox" id="credit1"> 1. אני תושב/ת ישראל
+              <input type="checkbox" id="credit1" checked disabled> 1. אני תושב/ת ישראל (מסומן אוטומטית)
             </label>
             <label class="checkbox-option">
               <input type="checkbox" id="credit2a"> 2א. אני נכה 100% / עיוור/ת לצמיתות
