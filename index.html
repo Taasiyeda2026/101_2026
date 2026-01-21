@@ -738,15 +738,15 @@ body {
           </div>
           <div class="form-group" style="margin-top: 16px;">
             <label>הכנסות בן/בת הזוג</label>
-            <div class="radio-group">
-              <label class="radio-option">
-                <input type="radio" name="spouseIncome" value="none"> אין לבן/בת הזוג כל הכנסה
+            <div class="spouse-income-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px;">
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="spouseIncome" value="none" style="margin-left: 8px;"> אין הכנסה
               </label>
-              <label class="radio-option">
-                <input type="radio" name="spouseIncome" value="work"> יש הכנסה מעבודה/קצבה/עסק
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="spouseIncome" value="work" style="margin-left: 8px;"> עבודה/קצבה/עסק
               </label>
-              <label class="radio-option">
-                <input type="radio" name="spouseIncome" value="other"> יש הכנסה אחרת
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="spouseIncome" value="other" style="margin-left: 8px;"> הכנסה אחרת
               </label>
             </div>
           </div>
@@ -769,52 +769,52 @@ body {
               <input type="checkbox" id="credit1" checked disabled> 1. אני תושב/ת ישראל (מסומן אוטומטית)
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit2a"> 2א. אני נכה 100% / עיוור/ת לצמיתות
+              <input type="checkbox" id="credit2a" onchange="confirmCredit(this, 'נכה 100% / עיוור/ת לצמיתות')"> 2א. אני נכה 100% / עיוור/ת לצמיתות
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit2b"> 2ב. אני מקבל/ת תגמול חודשי לפי חוק הנכים
+              <input type="checkbox" id="credit2b" onchange="confirmCredit(this, 'מקבל/ת תגמול חודשי לפי חוק הנכים')"> 2ב. אני מקבל/ת תגמול חודשי לפי חוק הנכים
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit3"> 3. אני תושב/ת קבוע/ה בישוב מזכה
+              <input type="checkbox" id="credit3" onchange="confirmCredit(this, 'תושב/ת קבוע/ה בישוב מזכה')"> 3. אני תושב/ת קבוע/ה בישוב מזכה
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit4"> 4. אני עולה חדש/ה
+              <input type="checkbox" id="credit4" onchange="confirmCredit(this, 'עולה חדש/ה')"> 4. אני עולה חדש/ה
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit5"> 5. בגין בן/בת זוגי המתגורר/ת עימי ואין לו/לה הכנסות
+              <input type="checkbox" id="credit5" onchange="confirmCredit(this, 'בן/בת זוג ללא הכנסות')"> 5. בגין בן/בת זוגי המתגורר/ת עימי ואין לו/לה הכנסות
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit6"> 6. אני הורה במשפחה חד הורית החי בנפרד
+              <input type="checkbox" id="credit6" onchange="confirmCredit(this, 'הורה במשפחה חד הורית')"> 6. אני הורה במשפחה חד הורית החי בנפרד
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit7"> 7. בגין ילדיי שבחזקתי
+              <input type="checkbox" id="credit7" onchange="confirmCredit(this, 'ילדים בחזקתי')"> 7. בגין ילדיי שבחזקתי
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit8"> 8. בגין ילדיי
+              <input type="checkbox" id="credit8" onchange="confirmCredit(this, 'ילדיי')"> 8. בגין ילדיי
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit9"> 9. אני הורה יחיד לילדיי שבחזקתי
+              <input type="checkbox" id="credit9" onchange="confirmCredit(this, 'הורה יחיד')"> 9. אני הורה יחיד לילדיי שבחזקתי
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit10"> 10. בגין ילדיי שאינם בחזקתי ואני משתתף/ת בכלכלתם
+              <input type="checkbox" id="credit10" onchange="confirmCredit(this, 'ילדים שאינם בחזקתי')"> 10. בגין ילדיי שאינם בחזקתי ואני משתתף/ת בכלכלתם
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit11"> 11. אני הורה לילדים עם מוגבלות
+              <input type="checkbox" id="credit11" onchange="confirmCredit(this, 'הורה לילדים עם מוגבלות')"> 11. אני הורה לילדים עם מוגבלות
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit12"> 12. בגין מזונות לבן/בת זוגי לשעבר
+              <input type="checkbox" id="credit12" onchange="confirmCredit(this, 'מזונות לבן/בת זוג לשעבר')"> 12. בגין מזונות לבן/בת זוגי לשעבר
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit13"> 13. מלאו לי או לבן/בת זוגי 16 שנים וטרם מלאו 18 שנים
+              <input type="checkbox" id="credit13" onchange="confirmCredit(this, 'גיל 16-18')"> 13. מלאו לי או לבן/בת זוגי 16 שנים וטרם מלאו 18 שנים
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit14"> 14. אני חייל/ת משוחרר/ת / שירתתי בשירות לאומי
+              <input type="checkbox" id="credit14" onchange="confirmCredit(this, 'חייל/ת משוחרר/ת')"> 14. אני חייל/ת משוחרר/ת / שירתתי בשירות לאומי
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit15"> 15. בגין סיום לימודים לתואר אקדמי / התמחות / לימודי מקצוע
+              <input type="checkbox" id="credit15" onchange="confirmCredit(this, 'סיום לימודים')"> 15. בגין סיום לימודים לתואר אקדמי / התמחות / לימודי מקצוע
             </label>
             <label class="checkbox-option">
-              <input type="checkbox" id="credit16"> 16. שירתתי כלוחם/ת מילואים
+              <input type="checkbox" id="credit16" onchange="confirmCredit(this, 'לוחם/ת מילואים')"> 16. שירתתי כלוחם/ת מילואים
             </label>
           </div>
         </div>
@@ -978,6 +978,14 @@ function addChild() {
 function removeChild(btn) {
   if (document.querySelectorAll('.child-row').length > 1) {
     btn.closest('.child-row').remove();
+  }
+}
+
+function confirmCredit(checkbox, creditName) {
+  if (checkbox.checked) {
+    if (!confirm('האם את/ה בטוח/ה שברצונך לבקש זיכוי עבור: ' + creditName + '?\n\nהצהרה כוזבת עלולה להוביל לעבירה על פקודת מס הכנסה.')) {
+      checkbox.checked = false;
+    }
   }
 }
 
