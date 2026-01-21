@@ -201,13 +201,18 @@ body {
 
 .child-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto auto auto;
+  grid-template-columns: 2fr 1fr 1fr auto auto 40px;
   gap: 12px;
   align-items: end;
   padding: 12px;
   background: #f8f9fa;
   border-radius: 8px;
   margin-bottom: 8px;
+  position: relative;
+}
+
+.child-row .remove-child-btn {
+  align-self: center;
 }
 
 .child-row input {
@@ -395,7 +400,7 @@ body {
   }
   
   .child-row {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr auto auto 40px;
   }
   
   .radio-group {
@@ -622,25 +627,25 @@ body {
             </div>
           </div>
           <div class="form-group" style="margin-top: 16px;">
-            <label>סוג ההכנסה ממעסיק זה:</label>
-            <div class="radio-group" style="margin-top: 8px;">
-              <label class="radio-option">
-                <input type="radio" name="incomeType" value="monthly" required> משכורת חודש
+            <label>סוג ההכנסה ממעסיק זה: *</label>
+            <div class="income-type-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px;">
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="incomeType" value="monthly" required style="margin-left: 8px;"> משכורת חודש
               </label>
-              <label class="radio-option">
-                <input type="radio" name="incomeType" value="additional"> משכורת בעד משרה נוספת
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="incomeType" value="additional" style="margin-left: 8px;"> משכורת נוספת
               </label>
-              <label class="radio-option">
-                <input type="radio" name="incomeType" value="partial"> משכורת חלקית
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="incomeType" value="partial" style="margin-left: 8px;"> משכורת חלקית
               </label>
-              <label class="radio-option">
-                <input type="radio" name="incomeType" value="daily"> שכר עבודה (עובד יומי)
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="incomeType" value="daily" style="margin-left: 8px;"> שכר יומי
               </label>
-              <label class="radio-option">
-                <input type="radio" name="incomeType" value="pension"> קצבה
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="incomeType" value="pension" style="margin-left: 8px;"> קצבה
               </label>
-              <label class="radio-option">
-                <input type="radio" name="incomeType" value="scholarship"> מלגה
+              <label class="radio-option" style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                <input type="radio" name="incomeType" value="scholarship" style="margin-left: 8px;"> מלגה
               </label>
             </div>
           </div>
