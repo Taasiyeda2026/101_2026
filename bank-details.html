@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>פרטי בנק ומסמכים - עובד חדש</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.header p {
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.form-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #667eea;
+}
+
+.section-title .icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.employer-section {
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-group input, .form-group select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input[readonly] {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.upload-area {
+  border: 2px dashed #667eea;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #fafafa;
+  margin-bottom: 12px;
+}
+
+.upload-area:hover {
+  background: #f0f4ff;
+  border-color: #764ba2;
+}
+
+.upload-area.has-file {
+  border-color: #10b981;
+  background: #ecfdf5;
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.upload-text {
+  color: #666;
+  font-size: 14px;
+}
+
+.upload-text strong {
+  color: #667eea;
+}
+
+.file-input {
+  display: none;
+}
+
+.preview-container {
+  display: none;
+  margin-top: 12px;
+}
+
+.preview-container.show {
+  display: block;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #10b981;
+  margin-top: 8px;
+}
+
+.note {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  color: #856404;
+  margin-top: 16px;
+}
+
+.bank-select-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.bank-option {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bank-option:hover {
+  background: #e9ecef;
+}
+
+.bank-option input {
+  margin-left: 8px;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.back-link {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bank-select-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← חזרה לטופס 101</a>
+  
+  <div class="header">
+    <h1>פרטי בנק ומסמכים - עובד חדש</h1>
+    <p>תעשיידע – תעשייה למען חינוך מתקדם ע"ר</p>
+  </div>
+
+  <form id="bankForm" class="form-card">
+    <div class="employer-section">
+      <div class="section-title">
+        <span class="icon">א</span>
+        פרטי המעסיק (קבוע)
+      </div>
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>שם המעסיק</label>
+          <input type="text" value="תעשיידע – תעשייה למען חינוך מתקדם ע״ר" readonly>
+        </div>
+        <div class="form-group">
+          <label>מספר תיק ניכויים</label>
+          <input type="text" value="9935176040" readonly>
+        </div>
+        <div class="form-group">
+          <label>כתובת</label>
+          <input type="text" value="דניאל פריש 3, תל אביב" readonly>
+        </div>
+        <div class="form-group">
+          <label>טלפון</label>
+          <input type="tel" value="050-8321062" readonly>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">ב</span>
+        פרטי העובד/ת
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>מספר תעודת זהות *</label>
+          <input type="text" id="employeeId" maxlength="9" pattern="[0-9]{9}" required>
+        </div>
+        <div class="form-group">
+          <label>שם משפחה *</label>
+          <input type="text" id="lastName" required>
+        </div>
+        <div class="form-group">
+          <label>שם פרטי *</label>
+          <input type="text" id="firstName" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">ג</span>
+        פרטי חשבון בנק
+      </div>
+      <div class="form-group">
+        <label>בנק *</label>
+        <div class="bank-select-grid">
+          <label class="bank-option">
+            <input type="radio" name="bank" value="12" required> בנק הפועלים (12)
+          </label>
+          <label class="bank-option">
+            <input type="radio" name="bank" value="11"> בנק דיסקונט (11)
+          </label>
+          <label class="bank-option">
+            <input type="radio" name="bank" value="10"> בנק לאומי (10)
+          </label>
+          <label class="bank-option">
+            <input type="radio" name="bank" value="20"> בנק מזרחי טפחות (20)
+          </label>
+          <label class="bank-option">
+            <input type="radio" name="bank" value="14"> בנק אוצר החייל (14)
+          </label>
+          <label class="bank-option">
+            <input type="radio" name="bank" value="17"> בנק מרכנתיל (17)
+          </label>
+          <label class="bank-option">
+            <input type="radio" name="bank" value="31"> בנק הבינלאומי (31)
+          </label>
+          <label class="bank-option">
+            <input type="radio" name="bank" value="54"> בנק ירושלים (54)
+          </label>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-top: 16px;">
+        <div class="form-group">
+          <label>מספר סניף *</label>
+          <input type="text" id="branchNumber" maxlength="4" pattern="[0-9]{1,4}" required>
+        </div>
+        <div class="form-group">
+          <label>מספר חשבון *</label>
+          <input type="text" id="accountNumber" maxlength="9" pattern="[0-9]{1,9}" required>
+        </div>
+        <div class="form-group">
+          <label>שם בעל החשבון</label>
+          <input type="text" id="accountHolder">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">ד</span>
+        אישור ניהול חשבון בנק
+      </div>
+      <div class="upload-area" id="bankConfirmArea" onclick="document.getElementById('bankConfirmInput').click()">
+        <div class="upload-icon">🏦</div>
+        <div class="upload-text">
+          <strong>לחץ להעלאת אישור ניהול חשבון</strong><br>
+          קובץ PDF או תמונה (JPG, PNG)
+        </div>
+      </div>
+      <input type="file" id="bankConfirmInput" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this, 'bankConfirmArea', 'bankConfirmPreview', 'bankConfirmName')">
+      <div id="bankConfirmPreview" class="preview-container"></div>
+      <div id="bankConfirmName" class="file-name"></div>
+      <div class="note">
+        ניתן להשיג אישור ניהול חשבון באפליקציית הבנק או בסניף הבנק.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">ה</span>
+        צילום תעודת זהות
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>צד קדמי *</label>
+          <div class="upload-area" id="idFrontArea" onclick="document.getElementById('idFrontInput').click()">
+            <div class="upload-icon">🪪</div>
+            <div class="upload-text">
+              <strong>לחץ להעלאת צד קדמי</strong>
+            </div>
+          </div>
+          <input type="file" id="idFrontInput" class="file-input" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFileUpload(this, 'idFrontArea', 'idFrontPreview', 'idFrontName')">
+          <div id="idFrontPreview" class="preview-container"></div>
+          <div id="idFrontName" class="file-name"></div>
+        </div>
+        <div class="form-group">
+          <label>צד אחורי (ספח)</label>
+          <div class="upload-area" id="idBackArea" onclick="document.getElementById('idBackInput').click()">
+            <div class="upload-icon">🪪</div>
+            <div class="upload-text">
+              <strong>לחץ להעלאת ספח</strong>
+            </div>
+          </div>
+          <input type="file" id="idBackInput" class="file-input" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFileUpload(this, 'idBackArea', 'idBackPreview', 'idBackName')">
+          <div id="idBackPreview" class="preview-container"></div>
+          <div id="idBackName" class="file-name"></div>
+        </div>
+        <div class="form-group">
+          <label>ביומטרי (אם רלוונטי)</label>
+          <div class="upload-area" id="idBioArea" onclick="document.getElementById('idBioInput').click()">
+            <div class="upload-icon">🪪</div>
+            <div class="upload-text">
+              <strong>לחץ להעלאה</strong>
+            </div>
+          </div>
+          <input type="file" id="idBioInput" class="file-input" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFileUpload(this, 'idBioArea', 'idBioPreview', 'idBioName')">
+          <div id="idBioPreview" class="preview-container"></div>
+          <div id="idBioName" class="file-name"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">ו</span>
+        הצהרה
+      </div>
+      <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; font-size: 14px; line-height: 1.6;">
+        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+          <input type="checkbox" id="declaration" required style="margin-top: 4px;">
+          <span>
+            אני מצהיר/ה כי פרטי חשבון הבנק שמסרתי לעיל הינם נכונים ומדויקים, 
+            והחשבון רשום על שמי. אני מאשר/ת העברת משכורת לחשבון זה.
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">שלח טופס והפק PDF</button>
+  </form>
+</div>
+
+<script>
+function handleFileUpload(input, areaId, previewId, nameId) {
+  const file = input.files[0];
+  const area = document.getElementById(areaId);
+  const preview = document.getElementById(previewId);
+  const nameEl = document.getElementById(nameId);
+  
+  if (file) {
+    area.classList.add('has-file');
+    nameEl.textContent = file.name;
+    
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.innerHTML = '<img src="' + e.target.result + '" class="preview-image">';
+        preview.classList.add('show');
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.innerHTML = '<p style="color: #667eea;">קובץ PDF הועלה בהצלחה</p>';
+      preview.classList.add('show');
+    }
+  }
+}
+
+document.getElementById('bankForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  if (!document.getElementById('declaration').checked) {
+    alert('יש לאשר את ההצהרה');
+    return;
+  }
+  
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const margin = 15;
+  let y = 20;
+  
+  pdf.setFontSize(18);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Bank Details Form - New Employee', pageWidth / 2, y, { align: 'center' });
+  
+  y += 10;
+  pdf.setFontSize(12);
+  pdf.setFont('Helvetica', 'normal');
+  pdf.text('Tasiyeda - Industry for Advanced Education', pageWidth / 2, y, { align: 'center' });
+  
+  y += 15;
+  pdf.setFontSize(10);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Employee Details:', margin, y);
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  pdf.text('ID: ' + document.getElementById('employeeId').value, margin + 5, y);
+  y += 5;
+  pdf.text('Name: ' + document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value, margin + 5, y);
+  
+  y += 12;
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Bank Details:', margin, y);
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  
+  const bankRadio = document.querySelector('input[name="bank"]:checked');
+  const bankName = bankRadio ? bankRadio.parentElement.textContent.trim() : '';
+  pdf.text('Bank: ' + bankName, margin + 5, y);
+  y += 5;
+  pdf.text('Branch: ' + document.getElementById('branchNumber').value, margin + 5, y);
+  y += 5;
+  pdf.text('Account: ' + document.getElementById('accountNumber').value, margin + 5, y);
+  y += 5;
+  pdf.text('Account Holder: ' + (document.getElementById('accountHolder').value || 'Same as employee'), margin + 5, y);
+  
+  y += 15;
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Uploaded Documents:', margin, y);
+  y += 6;
+  pdf.setFont('Helvetica', 'normal');
+  
+  const bankConfirm = document.getElementById('bankConfirmInput').files[0];
+  pdf.text('Bank Confirmation: ' + (bankConfirm ? bankConfirm.name : 'Not uploaded'), margin + 5, y);
+  y += 5;
+  
+  const idFront = document.getElementById('idFrontInput').files[0];
+  pdf.text('ID Front: ' + (idFront ? idFront.name : 'Not uploaded'), margin + 5, y);
+  y += 5;
+  
+  const idBack = document.getElementById('idBackInput').files[0];
+  pdf.text('ID Back: ' + (idBack ? idBack.name : 'Not uploaded'), margin + 5, y);
+  
+  y += 20;
+  pdf.setFillColor(255, 255, 200);
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 20, 'F');
+  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 20);
+  
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('Declaration', margin + 5, y + 2);
+  y += 8;
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(8);
+  pdf.text('I declare that the bank details provided are correct and authorize salary transfer to this account.', margin + 5, y);
+  
+  y += 15;
+  pdf.setFontSize(10);
+  pdf.text('Date: ' + new Date().toLocaleDateString('he-IL'), margin, y);
+  
+  const employeeId = document.getElementById('employeeId').value;
+  const fileName = 'bank_details_' + employeeId + '_' + new Date().toISOString().slice(0,10) + '.pdf';
+  pdf.save(fileName);
+  
+  alert('הטופס נשלח בהצלחה! קובץ PDF הורד למחשב.');
+});
+</script>
+</body>
+</html>
