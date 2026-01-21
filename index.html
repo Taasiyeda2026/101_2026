@@ -1205,19 +1205,15 @@ async function generatePDF() {
     const { width: width1, height: height1 } = page1.getSize();
     const { width: width2, height: height2 } = page2.getSize();
     
-    const fontSize = 10;
-    const smallFont = 8;
+    const fontSize = 9;
+    const smallFont = 7;
     const checkMark = 'X';
     
-    function getPageHeight(page) {
-      return page === page1 ? height1 : height2;
-    }
-    
-    function drawText(page, text, x, y, options = {}) {
+    function drawTextOnPage(page, text, x, y, options = {}) {
       if (!text) return;
       const font = options.bold ? helveticaBold : helveticaFont;
       const size = options.size || fontSize;
-      const pageHeight = getPageHeight(page);
+      const pageHeight = page === page1 ? height1 : height2;
       page.drawText(String(text), {
         x: x,
         y: pageHeight - y,
@@ -1227,29 +1223,91 @@ async function generatePDF() {
       });
     }
     
-    function drawCheck(page, x, y) {
-      const pageHeight = getPageHeight(page);
+    function drawCheckOnPage(page, x, y) {
+      const pageHeight = page === page1 ? height1 : height2;
       page.drawText(checkMark, {
         x: x,
         y: pageHeight - y,
-        size: 12,
+        size: 10,
         font: helveticaBold,
         color: rgb(0, 0, 0),
       });
     }
     
+    const P1 = {
+      taxYear: { x: 293, y: 66 },
+      employer: { name: { x: 385, y: 104 }, address: { x: 175, y: 104 }, phone: { x: 95, y: 104 }, tik: { x: 35, y: 104 } },
+      employee: {
+        id: { x: 485, y: 138 }, lastName: { x: 370, y: 138 }, firstName: { x: 260, y: 138 },
+        birthDate: { x: 145, y: 138 }, aliyaDate: { x: 50, y: 138 },
+        passport: { x: 485, y: 160 },
+        street: { x: 350, y: 175 }, houseNum: { x: 260, y: 175 }, city: { x: 155, y: 175 }, zip: { x: 50, y: 175 }
+      },
+      gender: { male: { x: 545, y: 195 }, female: { x: 465, y: 210 } },
+      marital: {
+        single: { x: 500, y: 195 }, married: { x: 440, y: 195 }, divorced: { x: 375, y: 195 },
+        widowed: { x: 418, y: 210 }, separated: { x: 348, y: 210 }
+      },
+      resident: { x: 312, y: 195 },
+      kibbutz: { yes: { x: 276, y: 195 }, transferred: { x: 196, y: 195 }, no: { x: 276, y: 210 }, notTransferred: { x: 196, y: 210 } },
+      kupat: { yes: { x: 88, y: 210 }, no: { x: 42, y: 195 } },
+      contact: { email: { x: 400, y: 232 }, phone: { x: 230, y: 232 }, mobile: { x: 70, y: 232 } },
+      children: { startY: 290, rowHeight: 12, name: 420, id: 330, birth: 250, custody: 206, allowance: 193 },
+      income: {
+        workStart: { x: 78, y: 265 },
+        monthly: { x: 133, y: 276 }, additional: { x: 133, y: 288 }, partial: { x: 133, y: 300 },
+        daily: { x: 133, y: 312 }, pension: { x: 133, y: 324 }, scholarship: { x: 133, y: 336 }
+      },
+      otherIncome: { none: { x: 133, y: 368 }, yes: { x: 133, y: 393 } },
+      spouse: {
+        id: { x: 485, y: 535 }, lastName: { x: 370, y: 535 }, firstName: { x: 260, y: 535 },
+        birthDate: { x: 145, y: 535 }, aliyaDate: { x: 50, y: 535 },
+        noIncome: { x: 255, y: 568 }, work: { x: 88, y: 568 }, other: { x: 42, y: 568 }
+      }
+    };
+    
+    const P2 = {
+      employeeId: { x: 480, y: 33 },
+      credits: {
+        credit1: { x: 547, y: 52 },
+        credit2a: { x: 547, y: 80 },
+        credit2b: { x: 547, y: 100 },
+        credit3: { x: 547, y: 130 },
+        credit4: { x: 547, y: 160 },
+        credit5: { x: 547, y: 188 },
+        credit6: { x: 547, y: 216 },
+        credit7: { x: 547, y: 248 },
+        credit8: { x: 547, y: 278 },
+        credit9: { x: 547, y: 306 },
+        credit10: { x: 547, y: 334 },
+        credit11: { x: 547, y: 362 },
+        credit12: { x: 547, y: 390 },
+        credit13: { x: 547, y: 418 },
+        credit14: { x: 547, y: 446 },
+        credit15: { x: 547, y: 477 },
+        credit16: { x: 547, y: 508 }
+      },
+      taxAdj: {
+        option1: { x: 547, y: 545 },
+        option2: { x: 547, y: 588 },
+        option3: { x: 547, y: 698 },
+        empTable: { startY: 625, rowHeight: 13, name: 460, address: 340, tik: 250, type: 175, income: 100, tax: 40 }
+      },
+      signature: { date: { x: 140, y: 755 }, x: 395, y: 780, width: 110, height: 35 }
+    };
+    
     const taxYear = new Date().getFullYear();
-    drawText(page1, String(taxYear), 295, 68, { bold: true, size: 14 });
+    drawTextOnPage(page1, String(taxYear), P1.taxYear.x, P1.taxYear.y, { bold: true, size: 12 });
     
     const employerName = document.getElementById('employerName').value || '';
     const employerTik = document.getElementById('employerTikNikuyim').value || '';
     const employerAddress = document.getElementById('employerAddress').value || '';
     const employerPhone = document.getElementById('employerPhone').value || '';
     
-    drawText(page1, employerName, 420, 108);
-    drawText(page1, employerAddress, 230, 108);
-    drawText(page1, employerPhone, 130, 108);
-    drawText(page1, employerTik, 45, 108);
+    drawTextOnPage(page1, employerName, P1.employer.name.x, P1.employer.name.y, { size: smallFont });
+    drawTextOnPage(page1, employerAddress, P1.employer.address.x, P1.employer.address.y, { size: smallFont });
+    drawTextOnPage(page1, employerPhone, P1.employer.phone.x, P1.employer.phone.y, { size: smallFont });
+    drawTextOnPage(page1, employerTik, P1.employer.tik.x, P1.employer.tik.y, { size: smallFont });
     
     const idNum = document.getElementById('idNumber').value || '';
     const lastName = document.getElementById('lastName').value || '';
@@ -1257,51 +1315,44 @@ async function generatePDF() {
     const birthDateVal = document.getElementById('birthDate').value;
     const birthDate = birthDateVal ? formatHebrewDate(birthDateVal) : '';
     
-    drawText(page1, idNum, 495, 142);
-    drawText(page1, lastName, 380, 142);
-    drawText(page1, firstName, 270, 142);
-    drawText(page1, birthDate, 160, 142);
+    drawTextOnPage(page1, idNum, P1.employee.id.x, P1.employee.id.y, { size: smallFont });
+    drawTextOnPage(page1, lastName, P1.employee.lastName.x, P1.employee.lastName.y, { size: smallFont });
+    drawTextOnPage(page1, firstName, P1.employee.firstName.x, P1.employee.firstName.y, { size: smallFont });
+    drawTextOnPage(page1, birthDate, P1.employee.birthDate.x, P1.employee.birthDate.y, { size: smallFont });
     
     const street = document.getElementById('street').value || '';
     const houseNum = document.getElementById('houseNumber').value || '';
     const city = document.getElementById('city').value || '';
     const zipCode = document.getElementById('zipCode').value || '';
     
-    drawText(page1, street, 320, 168);
-    drawText(page1, houseNum, 240, 168);
-    drawText(page1, city, 155, 168);
-    drawText(page1, zipCode, 55, 168);
+    drawTextOnPage(page1, street, P1.employee.street.x, P1.employee.street.y, { size: smallFont });
+    drawTextOnPage(page1, houseNum, P1.employee.houseNum.x, P1.employee.houseNum.y, { size: smallFont });
+    drawTextOnPage(page1, city, P1.employee.city.x, P1.employee.city.y, { size: smallFont });
+    drawTextOnPage(page1, zipCode, P1.employee.zip.x, P1.employee.zip.y, { size: smallFont });
     
     const gender = document.querySelector('input[name="gender"]:checked');
     if (gender) {
       if (gender.value === 'male') {
-        drawCheck(page1, 540, 193);
+        drawCheckOnPage(page1, P1.gender.male.x, P1.gender.male.y);
       } else {
-        drawCheck(page1, 467, 206);
+        drawCheckOnPage(page1, P1.gender.female.x, P1.gender.female.y);
       }
     }
     
     const marital = document.getElementById('maritalStatus').value;
-    const maritalPositions = {
-      'single': { x: 493, y: 193 },
-      'married': { x: 432, y: 193 },
-      'divorced': { x: 378, y: 193 },
-      'widowed': { x: 420, y: 206 },
-      'separated': { x: 352, y: 206 }
-    };
-    if (maritalPositions[marital]) {
-      drawCheck(page1, maritalPositions[marital].x, maritalPositions[marital].y);
+    if (P1.marital[marital]) {
+      drawCheckOnPage(page1, P1.marital[marital].x, P1.marital[marital].y);
     }
     
-    drawCheck(page1, 316, 193);
+    drawCheckOnPage(page1, P1.resident.x, P1.resident.y);
     
     const email = document.getElementById('email').value || '';
     const phone = document.getElementById('phone').value || '';
     const mobile = document.getElementById('mobile').value || '';
     
-    drawText(page1, email, 400, 230);
-    drawText(page1, phone, 230, 230);
-    drawText(page1, mobile, 80, 230);
+    drawTextOnPage(page1, email, P1.contact.email.x, P1.contact.email.y, { size: 6 });
+    drawTextOnPage(page1, phone, P1.contact.phone.x, P1.contact.phone.y, { size: smallFont });
+    drawTextOnPage(page1, mobile, P1.contact.mobile.x, P1.contact.mobile.y, { size: smallFont });
     
     const childNames = document.querySelectorAll('input[name="childName[]"]');
     const childIds = document.querySelectorAll('input[name="childId[]"]');
@@ -1309,44 +1360,34 @@ async function generatePDF() {
     const childCustody = document.querySelectorAll('input[name="childCustody[]"]');
     const childAllowance = document.querySelectorAll('input[name="childAllowance[]"]');
     
-    let childY = 292;
+    let childY = P1.children.startY;
     for (let i = 0; i < Math.min(childNames.length, 6); i++) {
       if (childNames[i].value) {
-        drawText(page1, childNames[i].value, 420, childY, { size: smallFont });
-        drawText(page1, childIds[i].value || '', 330, childY, { size: smallFont });
+        drawTextOnPage(page1, childNames[i].value, P1.children.name, childY, { size: 6 });
+        drawTextOnPage(page1, childIds[i].value || '', P1.children.id, childY, { size: 6 });
         const childBirth = childBirths[i].value ? formatHebrewDate(childBirths[i].value) : '';
-        drawText(page1, childBirth, 250, childY, { size: smallFont });
-        if (childCustody[i]?.checked) drawCheck(page1, 207, childY);
-        if (childAllowance[i]?.checked) drawCheck(page1, 195, childY);
-        childY += 14;
+        drawTextOnPage(page1, childBirth, P1.children.birth, childY, { size: 6 });
+        if (childCustody[i]?.checked) drawCheckOnPage(page1, P1.children.custody, childY);
+        if (childAllowance[i]?.checked) drawCheckOnPage(page1, P1.children.allowance, childY);
+        childY += P1.children.rowHeight;
       }
     }
     
     const workStartVal = document.getElementById('workStartDate').value;
     const workStart = workStartVal ? formatHebrewDate(workStartVal) : '';
-    drawText(page1, workStart, 80, 268, { size: smallFont });
+    drawTextOnPage(page1, workStart, P1.income.workStart.x, P1.income.workStart.y, { size: 6 });
     
     const incomeType = document.querySelector('input[name="incomeType"]:checked');
-    if (incomeType) {
-      const incomePositions = {
-        'monthly': { x: 130, y: 280 },
-        'additional': { x: 130, y: 292 },
-        'partial': { x: 130, y: 305 },
-        'daily': { x: 130, y: 317 },
-        'pension': { x: 130, y: 330 },
-        'scholarship': { x: 130, y: 342 }
-      };
-      if (incomePositions[incomeType.value]) {
-        drawCheck(page1, incomePositions[incomeType.value].x, incomePositions[incomeType.value].y);
-      }
+    if (incomeType && P1.income[incomeType.value]) {
+      drawCheckOnPage(page1, P1.income[incomeType.value].x, P1.income[incomeType.value].y);
     }
     
     const otherIncome = document.querySelector('input[name="otherIncome"]:checked');
     if (otherIncome) {
       if (otherIncome.value === 'none') {
-        drawCheck(page1, 130, 380);
+        drawCheckOnPage(page1, P1.otherIncome.none.x, P1.otherIncome.none.y);
       } else if (otherIncome.value === 'yes') {
-        drawCheck(page1, 130, 405);
+        drawCheckOnPage(page1, P1.otherIncome.yes.x, P1.otherIncome.yes.y);
       }
     }
     
@@ -1354,47 +1395,27 @@ async function generatePDF() {
     const spouseFirst = document.getElementById('spouseFirstName').value || '';
     const spouseLast = document.getElementById('spouseLastName').value || '';
     
-    drawText(page1, spouseId, 495, 538);
-    drawText(page1, spouseLast, 380, 538);
-    drawText(page1, spouseFirst, 270, 538);
+    drawTextOnPage(page1, spouseId, P1.spouse.id.x, P1.spouse.id.y, { size: smallFont });
+    drawTextOnPage(page1, spouseLast, P1.spouse.lastName.x, P1.spouse.lastName.y, { size: smallFont });
+    drawTextOnPage(page1, spouseFirst, P1.spouse.firstName.x, P1.spouse.firstName.y, { size: smallFont });
     
     const spouseIncome = document.querySelector('input[name="spouseIncome"]:checked');
     if (spouseIncome) {
       if (spouseIncome.value === 'none') {
-        drawCheck(page1, 260, 565);
+        drawCheckOnPage(page1, P1.spouse.noIncome.x, P1.spouse.noIncome.y);
       } else if (spouseIncome.value === 'work') {
-        drawCheck(page1, 90, 565);
+        drawCheckOnPage(page1, P1.spouse.work.x, P1.spouse.work.y);
       } else if (spouseIncome.value === 'other') {
-        drawCheck(page1, 45, 565);
+        drawCheckOnPage(page1, P1.spouse.other.x, P1.spouse.other.y);
       }
     }
     
-    drawText(page2, idNum, 495, 35, { size: smallFont });
+    drawTextOnPage(page2, idNum, P2.employeeId.x, P2.employeeId.y, { size: smallFont });
     
-    const creditPositions = {
-      'credit1': { x: 542, y: 70 },
-      'credit2a': { x: 542, y: 90 },
-      'credit2b': { x: 542, y: 110 },
-      'credit3': { x: 542, y: 140 },
-      'credit4': { x: 542, y: 165 },
-      'credit5': { x: 542, y: 190 },
-      'credit6': { x: 542, y: 215 },
-      'credit7': { x: 542, y: 250 },
-      'credit8': { x: 542, y: 280 },
-      'credit9': { x: 542, y: 305 },
-      'credit10': { x: 542, y: 330 },
-      'credit11': { x: 542, y: 355 },
-      'credit12': { x: 542, y: 380 },
-      'credit13': { x: 542, y: 405 },
-      'credit14': { x: 542, y: 430 },
-      'credit15': { x: 542, y: 460 },
-      'credit16': { x: 542, y: 490 }
-    };
-    
-    Object.keys(creditPositions).forEach(id => {
+    Object.keys(P2.credits).forEach(id => {
       const el = document.getElementById(id);
       if (el && el.checked) {
-        drawCheck(page2, creditPositions[id].x, creditPositions[id].y);
+        drawCheckOnPage(page2, P2.credits[id].x, P2.credits[id].y);
       }
     });
     
@@ -1402,9 +1423,9 @@ async function generatePDF() {
     const taxAdj2 = document.getElementById('taxAdj2')?.checked || false;
     const taxAdj3 = document.getElementById('taxAdj3')?.checked || false;
     
-    if (taxAdj1) drawCheck(page2, 542, 535);
-    if (taxAdj2) drawCheck(page2, 542, 580);
-    if (taxAdj3) drawCheck(page2, 542, 680);
+    if (taxAdj1) drawCheckOnPage(page2, P2.taxAdj.option1.x, P2.taxAdj.option1.y);
+    if (taxAdj2) drawCheckOnPage(page2, P2.taxAdj.option2.x, P2.taxAdj.option2.y);
+    if (taxAdj3) drawCheckOnPage(page2, P2.taxAdj.option3.x, P2.taxAdj.option3.y);
     
     if (taxAdj2) {
       const otherEmpNames = document.querySelectorAll('input[name="otherEmpName[]"]');
@@ -1414,23 +1435,23 @@ async function generatePDF() {
       const otherEmpIncomes = document.querySelectorAll('input[name="otherEmpIncome[]"]');
       const otherEmpTaxes = document.querySelectorAll('input[name="otherEmpTax[]"]');
       
-      let empY = 620;
+      let empY = P2.taxAdj.empTable.startY;
       for (let i = 0; i < Math.min(otherEmpNames.length, 3); i++) {
         if (otherEmpNames[i].value) {
-          drawText(page2, otherEmpNames[i].value, 460, empY, { size: 7 });
-          drawText(page2, otherEmpAddresses[i]?.value || '', 350, empY, { size: 7 });
-          drawText(page2, otherEmpTiks[i]?.value || '', 260, empY, { size: 7 });
-          drawText(page2, otherEmpTypes[i]?.value || '', 180, empY, { size: 7 });
-          drawText(page2, otherEmpIncomes[i]?.value || '', 100, empY, { size: 7 });
-          drawText(page2, otherEmpTaxes[i]?.value || '', 40, empY, { size: 7 });
-          empY += 14;
+          drawTextOnPage(page2, otherEmpNames[i].value, P2.taxAdj.empTable.name, empY, { size: 6 });
+          drawTextOnPage(page2, otherEmpAddresses[i]?.value || '', P2.taxAdj.empTable.address, empY, { size: 6 });
+          drawTextOnPage(page2, otherEmpTiks[i]?.value || '', P2.taxAdj.empTable.tik, empY, { size: 6 });
+          drawTextOnPage(page2, otherEmpTypes[i]?.value || '', P2.taxAdj.empTable.type, empY, { size: 6 });
+          drawTextOnPage(page2, otherEmpIncomes[i]?.value || '', P2.taxAdj.empTable.income, empY, { size: 6 });
+          drawTextOnPage(page2, otherEmpTaxes[i]?.value || '', P2.taxAdj.empTable.tax, empY, { size: 6 });
+          empY += P2.taxAdj.empTable.rowHeight;
         }
       }
     }
     
     const sigDate = document.getElementById('signatureDate').value;
     if (sigDate) {
-      drawText(page2, formatHebrewDate(sigDate), 150, 750);
+      drawTextOnPage(page2, formatHebrewDate(sigDate), P2.signature.date.x, P2.signature.date.y, { size: smallFont });
     }
     
     const signatureImg = canvas.toDataURL('image/png');
@@ -1438,14 +1459,14 @@ async function generatePDF() {
     const signature = await pdfDoc.embedPng(signatureImageBytes);
     
     page2.drawImage(signature, {
-      x: 400,
-      y: height - 770,
-      width: 100,
-      height: 40,
+      x: P2.signature.x,
+      y: height2 - P2.signature.y,
+      width: P2.signature.width,
+      height: P2.signature.height,
     });
     
     const timestamp = new Date().toISOString();
-    drawText(page2, 'Timestamp: ' + timestamp, 300, 785, { size: 6 });
+    drawTextOnPage(page2, timestamp, 280, 795, { size: 5 });
     
     const pdfBytes = await pdfDoc.save();
     
