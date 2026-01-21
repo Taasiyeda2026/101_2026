@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<title>טופס 101 מקוון – שנת מס 2026</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body { font-family: Heebo, Arial, sans-serif; background:#e5e7eb; padding:24px }
+.container { max-width:900px; margin:auto; background:#fff; padding:32px; border:2px solid #111827 }
+label{ font-weight:600; font-size:13px; display:block; margin-top:12px }
+input,select{ width:100%; padding:6px; font-size:13px; margin-top:4px }
+.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px }
+button{ margin-top:24px; padding:10px 18px; font-weight:700; background:#1f4bd8; color:#fff; border:none; border-radius:6px; cursor:pointer }
+canvas{ border:1px solid #111827; background:#fff }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>טופס 101 – שנת מס 2026</h2>
+
+<h3>פרטי עובד</h3>
+<div class="grid">
+  <div>
+    <label>שם מלא</label>
+    <input id="fullName">
+  </div>
+  <div>
+    <label>תעודת זהות</label>
+    <input id="idNumber">
+  </div>
+  <div>
+    <label>תאריך לידה</label>
+    <input type="date" id="birthDate">
+  </div>
+  <div>
+    <label>טלפון</label>
+    <input id="phone">
+  </div>
+</div>
+
+<h3 style="margin-top:32px">הצהרה</h3>
+<p style="font-size:14px">
+אני מצהיר/ה בזאת כי כל הפרטים שמסרתי בטופס זה נכונים ומלאים,
+ואני מתחייב/ת להודיע על כל שינוי.
+</p>
+
+<h3>חתימה</h3>
+<canvas id="signature" width="400" height="120"></canvas>
+<p style="font-size:12px">חתימה עם עכבר / אצבע</p>
+
+<button onclick="generatePDF()">סיום, חתימה והפקת PDF</button>
+
+</div>
+
+<script>
+/* חתימה */
+const canvas = document.getElementById('signature');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+
+canvas.addEventListener('mousedown', () => drawing = true);
+canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mousemove', draw);
+
+function draw(e){
+  if(!drawing) return;
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+/* יצוא PDF */
+function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  pdf.setFont("Helvetica");
+  pdf.setFontSize(14);
+  pdf.text("טופס 101 – שנת מס 2026", 105, 15, { align: "center" });
+
+  pdf.setFontSize(11);
+  pdf.text("שם מלא: " + document.getElementById('fullName').value, 20, 35);
+  pdf.text("תעודת זהות: " + document.getElementById('idNumber').value, 20, 45);
+  pdf.text("תאריך לידה: " + document.getElementById('birthDate').value, 20, 55);
+  pdf.text("טלפון: " + document.getElementById('phone').value, 20, 65);
+
+  pdf.text(
+    "הצהרה: אני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומלאים.",
+    20, 85
+  );
+
+  const imgData = canvas.toDataURL("image/png");
+  pdf.addImage(imgData, 'PNG', 20, 95, 80, 30);
+
+  const today = new Date().toLocaleDateString('he-IL');
+  pdf.text("תאריך חתימה: " + today, 20, 135);
+
+  pdf.save("101_2026_" + document.getElementById('idNumber').value + ".pdf");
+}
+</script>
+
+</body>
+</html>
