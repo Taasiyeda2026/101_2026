@@ -1077,210 +1077,355 @@ function generatePDF() {
   
   const pageWidth = 210;
   const pageHeight = 297;
-  const margin = 15;
-  let y = margin;
+  const margin = 10;
+  const contentWidth = pageWidth - 2 * margin;
+  let y = 8;
   
   pdf.setFont('Helvetica');
   
-  pdf.setFontSize(10);
+  function drawCell(x, w, h, label, value, labelSize = 6, valueSize = 8) {
+    pdf.setDrawColor(0);
+    pdf.rect(x, y, w, h);
+    pdf.setFontSize(labelSize);
+    pdf.setFont('Helvetica', 'normal');
+    pdf.setTextColor(80);
+    pdf.text(label, x + w - 1, y + 3, { align: 'right' });
+    pdf.setFontSize(valueSize);
+    pdf.setTextColor(0);
+    pdf.setFont('Helvetica', 'bold');
+    if (value) {
+      pdf.text(String(value), x + w - 1, y + h - 2, { align: 'right' });
+    }
+  }
+  
+  function drawSectionHeader(text, icon) {
+    pdf.setFillColor(230, 230, 250);
+    pdf.rect(margin, y, contentWidth, 7, 'F');
+    pdf.setDrawColor(0);
+    pdf.rect(margin, y, contentWidth, 7);
+    pdf.setFontSize(10);
+    pdf.setFont('Helvetica', 'bold');
+    pdf.setTextColor(0);
+    pdf.text(text + ' .' + icon, pageWidth - margin - 2, y + 5, { align: 'right' });
+    y += 7;
+  }
+  
+  function checkbox(checked) {
+    return checked ? '[X]' : '[ ]';
+  }
+  
+  pdf.setFontSize(7);
   pdf.setTextColor(100);
   pdf.text('0101/130', margin, y);
-  pdf.text('1 :2 (daf)', pageWidth - margin, y, { align: 'right' });
+  pdf.text('1 / 2 :daf', pageWidth - margin, y, { align: 'right' });
   
-  y += 8;
+  y += 5;
+  pdf.setFillColor(200, 200, 255);
+  pdf.rect(margin, y, contentWidth, 12, 'F');
+  pdf.setDrawColor(0);
+  pdf.rect(margin, y, contentWidth, 12);
+  
   pdf.setFontSize(14);
   pdf.setTextColor(0);
   pdf.setFont('Helvetica', 'bold');
-  pdf.text('Tofes 101 - Kartis Oved', pageWidth / 2, y, { align: 'center' });
-  
-  y += 6;
-  pdf.setFontSize(10);
-  pdf.setFont('Helvetica', 'normal');
-  pdf.text('Uvakasha Lehakala Uletieum Mas Al Yedei Hamaasik', pageWidth / 2, y, { align: 'center' });
-  
-  y += 5;
+  pdf.text('TOFES 101 - KARTIS OVED', pageWidth / 2, y + 5, { align: 'center' });
   pdf.setFontSize(8);
-  pdf.text('Lefi Takanot Mas Hachnasa (Nikui Mimaskort), Hatashna"g 1993', pageWidth / 2, y, { align: 'center' });
-  
-  y += 10;
-  const taxYear = new Date().getFullYear();
-  pdf.setFontSize(12);
-  pdf.setFont('Helvetica', 'bold');
-  pdf.text('Shnat Hamas: ' + taxYear, pageWidth / 2, y, { align: 'center' });
-  
-  y += 12;
-  pdf.setFillColor(240, 240, 240);
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 20, 'F');
-  pdf.setDrawColor(0);
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 20);
-  
-  pdf.setFontSize(10);
-  pdf.setFont('Helvetica', 'bold');
-  pdf.text('A. Pirtei Hamaasik', pageWidth - margin - 2, y, { align: 'right' });
-  y += 6;
   pdf.setFont('Helvetica', 'normal');
-  pdf.setFontSize(9);
+  pdf.text('Uvakasha Lehakala Uletieum Mas - Lefi Takanot Mas Hachnasa 1993', pageWidth / 2, y + 10, { align: 'center' });
+  
+  y += 14;
+  const taxYear = new Date().getFullYear();
+  pdf.setFontSize(11);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('SHNAT MAS: ' + taxYear, pageWidth / 2, y + 4, { align: 'center' });
+  y += 8;
+  
+  drawSectionHeader('PIRTEI HAMAASIK', 'A');
+  const cellH = 10;
+  const col4 = contentWidth / 4;
   
   const employerName = document.getElementById('employerName').value || '';
+  const employerTik = document.getElementById('employerTikNikuyim').value || '';
   const employerAddress = document.getElementById('employerAddress').value || '';
   const employerPhone = document.getElementById('employerPhone').value || '';
-  const employerTik = document.getElementById('employerTikNikuyim').value || '';
   
-  pdf.text('Shem: ' + employerName, pageWidth - margin - 5, y, { align: 'right' });
-  pdf.text('Ktovet: ' + employerAddress, pageWidth / 2, y, { align: 'center' });
-  y += 5;
-  pdf.text('Telefon: ' + employerPhone, pageWidth - margin - 5, y, { align: 'right' });
-  pdf.text('Tik Nikuyim: ' + employerTik, pageWidth / 2, y, { align: 'center' });
+  drawCell(margin, col4 * 2, cellH, 'Shem Maasik', employerName);
+  drawCell(margin + col4 * 2, col4, cellH, 'Tik Nikuyim', employerTik);
+  drawCell(margin + col4 * 3, col4, cellH, 'Telefon', employerPhone);
+  y += cellH;
+  drawCell(margin, contentWidth, cellH, 'Ktovet', employerAddress);
+  y += cellH + 2;
   
-  y += 12;
-  pdf.setFillColor(240, 240, 240);
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 35, 'F');
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 35);
-  
-  pdf.setFontSize(10);
-  pdf.setFont('Helvetica', 'bold');
-  pdf.text('B. Pirtei Haoved', pageWidth - margin - 2, y, { align: 'right' });
-  y += 6;
-  pdf.setFont('Helvetica', 'normal');
-  pdf.setFontSize(9);
+  drawSectionHeader('PIRTEI HAOVED', 'B');
   
   const idNum = document.getElementById('idNumber').value || '';
   const lastName = document.getElementById('lastName').value || '';
   const firstName = document.getElementById('firstName').value || '';
   const birthDate = formatHebrewDate(document.getElementById('birthDate').value);
-  const aliyaDate = formatHebrewDate(document.getElementById('aliyaDate').value);
   
-  pdf.text('Mispar Zehut: ' + idNum, pageWidth - margin - 5, y, { align: 'right' });
-  pdf.text('Shem Mishpacha: ' + lastName, pageWidth / 2 + 20, y, { align: 'right' });
-  pdf.text('Shem Prati: ' + firstName, pageWidth / 2 - 20, y, { align: 'right' });
-  y += 5;
-  pdf.text('Taarich Leida: ' + birthDate, pageWidth - margin - 5, y, { align: 'right' });
-  pdf.text('Taarich Aliya: ' + aliyaDate, pageWidth / 2, y, { align: 'right' });
+  const col3 = contentWidth / 3;
+  drawCell(margin, col3, cellH, 'Mispar Zehut', idNum);
+  drawCell(margin + col3, col3, cellH, 'Shem Mishpacha', lastName);
+  drawCell(margin + col3 * 2, col3, cellH, 'Shem Prati', firstName);
+  y += cellH;
   
-  y += 6;
+  drawCell(margin, col3, cellH, 'Taarich Leida', birthDate);
+  const gender = document.querySelector('input[name="gender"]:checked');
+  const genderText = gender ? (gender.value === 'male' ? 'Zachar' : 'Nekeva') : '';
+  drawCell(margin + col3, col3, cellH, 'Min', genderText);
+  const marital = document.getElementById('maritalStatus');
+  const maritalText = marital.options[marital.selectedIndex]?.text || '';
+  drawCell(margin + col3 * 2, col3, cellH, 'Matsav Mishpachti', maritalText);
+  y += cellH;
+  
   const street = document.getElementById('street').value || '';
   const houseNum = document.getElementById('houseNumber').value || '';
   const city = document.getElementById('city').value || '';
   const zipCode = document.getElementById('zipCode').value || '';
+  const fullAddress = street + ' ' + houseNum + ', ' + city + (zipCode ? ' ' + zipCode : '');
   
-  pdf.text('Ktovet: ' + street + ' ' + houseNum + ', ' + city + ' ' + zipCode, pageWidth - margin - 5, y, { align: 'right' });
+  drawCell(margin, contentWidth, cellH, 'Ktovet Megurim', fullAddress);
+  y += cellH;
   
-  y += 5;
   const phone = document.getElementById('phone').value || '';
   const mobile = document.getElementById('mobile').value || '';
   const email = document.getElementById('email').value || '';
   
-  pdf.text('Telefon: ' + phone + '  Nayad: ' + mobile, pageWidth - margin - 5, y, { align: 'right' });
-  y += 5;
-  pdf.text('Email: ' + email, pageWidth - margin - 5, y, { align: 'right' });
+  drawCell(margin, col3, cellH, 'Telefon', phone);
+  drawCell(margin + col3, col3, cellH, 'Nayad', mobile);
+  drawCell(margin + col3 * 2, col3, cellH, 'Email', email);
+  y += cellH + 2;
   
-  y += 5;
-  const gender = document.querySelector('input[name="gender"]:checked');
-  const genderText = gender ? (gender.value === 'male' ? 'Zachar' : 'Nekeva') : '';
-  const marital = document.getElementById('maritalStatus').value || '';
-  const israelRes = document.querySelector('input[name="israelResident"]:checked');
-  const resText = israelRes ? (israelRes.value === 'yes' ? 'Ken' : 'Lo') : '';
-  
-  pdf.text('Min: ' + genderText + '  Matsav Mishpachti: ' + marital + '  Toshav Israel: ' + resText, pageWidth - margin - 5, y, { align: 'right' });
-  
-  y += 12;
-  pdf.setFillColor(240, 240, 240);
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25, 'F');
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25);
-  
-  pdf.setFontSize(10);
-  pdf.setFont('Helvetica', 'bold');
-  pdf.text('G. Pirtim Al Yeladim (ad gil 19)', pageWidth - margin - 2, y, { align: 'right' });
-  y += 6;
-  pdf.setFont('Helvetica', 'normal');
-  pdf.setFontSize(8);
+  drawSectionHeader('PIRTIM AL YELADIM (ad gil 19)', 'G');
   
   const childNames = document.querySelectorAll('input[name="childName[]"]');
   const childIds = document.querySelectorAll('input[name="childId[]"]');
   const childBirths = document.querySelectorAll('input[name="childBirth[]"]');
   const childCustody = document.querySelectorAll('input[name="childCustody[]"]');
+  const childAllowance = document.querySelectorAll('input[name="childAllowance[]"]');
   
-  for (let i = 0; i < childNames.length && i < 4; i++) {
+  pdf.setDrawColor(0);
+  pdf.rect(margin, y, contentWidth, 6);
+  pdf.setFontSize(7);
+  pdf.setFont('Helvetica', 'bold');
+  const colChild = contentWidth / 5;
+  pdf.text('Kitsba', margin + colChild * 0.5, y + 4, { align: 'center' });
+  pdf.text('Bechezka', margin + colChild * 1.5, y + 4, { align: 'center' });
+  pdf.text('Taarich Leida', margin + colChild * 2.5, y + 4, { align: 'center' });
+  pdf.text('Mispar Zehut', margin + colChild * 3.5, y + 4, { align: 'center' });
+  pdf.text('Shem Yeled', margin + colChild * 4.5, y + 4, { align: 'center' });
+  y += 6;
+  
+  let hasChildren = false;
+  for (let i = 0; i < childNames.length && i < 6; i++) {
     if (childNames[i].value) {
-      const custody = childCustody[i].checked ? '[V]' : '[ ]';
-      pdf.text(
-        (i + 1) + '. ' + childNames[i].value + ' | ID: ' + childIds[i].value + ' | ' + formatHebrewDate(childBirths[i].value) + ' | Bechezka: ' + custody,
-        pageWidth - margin - 5, y, { align: 'right' }
-      );
-      y += 4;
+      hasChildren = true;
+      pdf.rect(margin, y, contentWidth, 6);
+      pdf.setFont('Helvetica', 'normal');
+      pdf.text(checkbox(childAllowance[i]?.checked), margin + colChild * 0.5, y + 4, { align: 'center' });
+      pdf.text(checkbox(childCustody[i]?.checked), margin + colChild * 1.5, y + 4, { align: 'center' });
+      pdf.text(formatHebrewDate(childBirths[i].value), margin + colChild * 2.5, y + 4, { align: 'center' });
+      pdf.text(childIds[i].value || '', margin + colChild * 3.5, y + 4, { align: 'center' });
+      pdf.text(childNames[i].value, margin + colChild * 4.5, y + 4, { align: 'center' });
+      y += 6;
     }
   }
+  if (!hasChildren) {
+    pdf.rect(margin, y, contentWidth, 6);
+    pdf.setFont('Helvetica', 'italic');
+    pdf.text('Ein yeladim', pageWidth / 2, y + 4, { align: 'center' });
+    y += 6;
+  }
+  y += 2;
   
-  y += 8;
-  pdf.setFillColor(240, 240, 240);
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 15, 'F');
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 15);
-  
-  pdf.setFontSize(10);
-  pdf.setFont('Helvetica', 'bold');
-  pdf.text('D. Hachnasot Memaasik Ze', pageWidth - margin - 2, y, { align: 'right' });
-  y += 6;
-  pdf.setFont('Helvetica', 'normal');
-  pdf.setFontSize(9);
+  drawSectionHeader('HACHNASOT MEMAASIK ZE', 'D');
   
   const workStart = formatHebrewDate(document.getElementById('workStartDate').value);
   const incomeType = document.querySelector('input[name="incomeType"]:checked');
-  const incomeTypeText = incomeType ? incomeType.value : '';
+  const incomeLabels = {
+    'monthly': 'Maskoret Chodesh',
+    'additional': 'Misra Nosefet', 
+    'partial': 'Maskoret Chelkit',
+    'daily': 'Schar Yomi',
+    'pension': 'Kitsba',
+    'scholarship': 'Milga'
+  };
+  const incomeText = incomeType ? incomeLabels[incomeType.value] || incomeType.value : '';
   
-  pdf.text('Taarich Tchilat Avoda: ' + workStart + '  Sug Hachnasa: ' + incomeTypeText, pageWidth - margin - 5, y, { align: 'right' });
+  drawCell(margin, contentWidth / 2, cellH, 'Taarich Tchilat Avoda', workStart);
+  drawCell(margin + contentWidth / 2, contentWidth / 2, cellH, 'Sug Hachnasa', incomeText);
+  y += cellH + 2;
   
-  y += 12;
-  pdf.setFillColor(255, 255, 200);
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25, 'F');
-  pdf.rect(margin, y - 4, pageWidth - 2 * margin, 25);
-  
-  pdf.setFontSize(10);
-  pdf.setFont('Helvetica', 'bold');
-  pdf.text('Y. Hatshara', pageWidth - margin - 2, y, { align: 'right' });
-  y += 6;
-  pdf.setFont('Helvetica', 'normal');
+  drawSectionHeader('HACHNASOT ACHEROT', 'H');
+  const otherIncome = document.querySelector('input[name="otherIncome"]:checked');
   pdf.setFontSize(8);
-  pdf.text('Ani matshir/a ki hapratim shemasarti betofes ze heinam mele\'im venechonim.', pageWidth - margin - 5, y, { align: 'right' });
-  y += 4;
-  pdf.text('Yadua li ki hashmata o mesirat pratim lo nechonim heina avera al pkudat mas hachnasa.', pageWidth - margin - 5, y, { align: 'right' });
-  y += 4;
-  pdf.text('Ani mitchayev/et lehodia lemaasik al kol shinui bepratai toch shavua yamim.', pageWidth - margin - 5, y, { align: 'right' });
+  pdf.setFont('Helvetica', 'normal');
+  pdf.rect(margin, y, contentWidth, 8);
+  pdf.text(checkbox(otherIncome?.value === 'none') + ' Ein hachnasot acherot   ' + 
+           checkbox(otherIncome?.value === 'yes') + ' Yesh hachnasot acherot', 
+           pageWidth - margin - 5, y + 5, { align: 'right' });
+  y += 10;
   
+  drawSectionHeader('PIRTEI BEN/BAT HAZUG', 'V');
+  const spouseId = document.getElementById('spouseId').value || '';
+  const spouseFirst = document.getElementById('spouseFirstName').value || '';
+  const spouseLast = document.getElementById('spouseLastName').value || '';
+  const spouseIncome = document.querySelector('input[name="spouseIncome"]:checked');
+  
+  if (spouseId || spouseFirst || spouseLast) {
+    drawCell(margin, col3, cellH, 'Mispar Zehut', spouseId);
+    drawCell(margin + col3, col3, cellH, 'Shem Mishpacha', spouseLast);
+    drawCell(margin + col3 * 2, col3, cellH, 'Shem Prati', spouseFirst);
+    y += cellH;
+  } else {
+    pdf.rect(margin, y, contentWidth, 6);
+    pdf.setFont('Helvetica', 'italic');
+    pdf.text('Lo duvach', pageWidth / 2, y + 4, { align: 'center' });
+    y += 6;
+  }
+  y += 2;
+  
+  drawSectionHeader('BAKASHA LEPTOR O ZIKUI MIMAS', 'CH');
+  
+  const credits = [
+    { id: 'credit1', text: '1. Toshav Israel' },
+    { id: 'credit2a', text: '2a. Neche 100%' },
+    { id: 'credit2b', text: '2b. Tagmul Chok Nechaim' },
+    { id: 'credit3', text: '3. Yishuv Mezake' },
+    { id: 'credit4', text: '4. Ole Chadash' },
+    { id: 'credit5', text: '5. Ben/Bat Zug Lelo Hachnasa' },
+    { id: 'credit6', text: '6. Mishpacha Chad Horit' },
+    { id: 'credit7', text: '7. Yeladim Bechezka' },
+    { id: 'credit8', text: '8. Yeladim' },
+    { id: 'credit9', text: '9. Hore Yachid' },
+    { id: 'credit10', text: '10. Yeladim Shelo Bechezka' },
+    { id: 'credit11', text: '11. Yeladim Im Mugbalut' },
+    { id: 'credit12', text: '12. Mezonot' },
+    { id: 'credit13', text: '13. Gil 16-18' },
+    { id: 'credit14', text: '14. Chayal Meshuchrar' },
+    { id: 'credit15', text: '15. Sium Limudim' },
+    { id: 'credit16', text: '16. Lochem Miluim' }
+  ];
+  
+  pdf.setFontSize(7);
+  let creditY = y;
+  const creditColW = contentWidth / 2;
+  let col = 0;
+  
+  credits.forEach((credit, idx) => {
+    const el = document.getElementById(credit.id);
+    const checked = el ? el.checked : false;
+    const xPos = margin + (col * creditColW);
+    
+    if (idx % 2 === 0 && idx > 0) {
+      creditY += 5;
+    }
+    col = idx % 2;
+    
+    pdf.text(checkbox(checked) + ' ' + credit.text, xPos + creditColW - 2, creditY + 4, { align: 'right' });
+  });
+  
+  y = creditY + 8;
+  
+  drawSectionHeader('BAKASHA LETIEUM MAS', 'T');
+  
+  const taxAdj1 = document.getElementById('taxAdj1')?.checked || false;
+  const taxAdj2 = document.getElementById('taxAdj2')?.checked || false;
+  const taxAdj3 = document.getElementById('taxAdj3')?.checked || false;
+  
+  pdf.setFontSize(7);
+  pdf.rect(margin, y, contentWidth, 12);
+  pdf.text(checkbox(taxAdj1) + ' 1. Lo hayta hachnasa mitchilat shnat mas', pageWidth - margin - 5, y + 4, { align: 'right' });
+  pdf.text(checkbox(taxAdj2) + ' 2. Yesh hachnasot nosafot mimaskoret', pageWidth - margin - 5, y + 8, { align: 'right' });
+  pdf.text(checkbox(taxAdj3) + ' 3. Pkid Shoma isher tieum', pageWidth - margin - 5, y + 12, { align: 'right' });
   y += 15;
-  pdf.setFontSize(10);
-  pdf.setFont('Helvetica', 'bold');
-  pdf.text('Chatima:', pageWidth - margin - 2, y, { align: 'right' });
   
-  const signatureImg = canvas.toDataURL('image/png');
-  const signatureX = pageWidth - margin - 65;
-  y += 3;
+  pdf.addPage();
+  y = 10;
   
-  pdf.setDrawColor(100);
-  pdf.setFillColor(255, 255, 255);
-  pdf.rect(signatureX, y, 60, 25, 'FD');
-  pdf.addImage(signatureImg, 'PNG', signatureX + 2, y + 2, 56, 21);
-  
-  y += 28;
-  pdf.setFontSize(8);
-  pdf.setFont('Helvetica', 'normal');
-  const sigDate = document.getElementById('signatureDate').value;
-  const timestamp = new Date().toISOString();
-  pdf.text('Taarich: ' + formatHebrewDate(sigDate), pageWidth - margin - 5, y, { align: 'right' });
-  y += 4;
   pdf.setFontSize(7);
   pdf.setTextColor(100);
-  pdf.text('Chatima Digitalit - Timestamp: ' + timestamp, pageWidth - margin - 5, y, { align: 'right' });
-  pdf.text('Beteum Takanot Rashut Hamisim Lechatima Electronit', pageWidth - margin - 5, y + 3, { align: 'right' });
+  pdf.text('0101/130', margin, y);
+  pdf.text('2 / 2 :daf', pageWidth - margin, y, { align: 'right' });
+  y += 8;
+  
+  drawSectionHeader('HATSHARA VECHATIMA', 'Y');
+  
+  pdf.setFillColor(255, 255, 230);
+  pdf.rect(margin, y, contentWidth, 25, 'F');
+  pdf.setDrawColor(0);
+  pdf.rect(margin, y, contentWidth, 25);
+  
+  pdf.setFontSize(8);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.setTextColor(0);
+  pdf.text('HATSHARA:', pageWidth - margin - 5, y + 5, { align: 'right' });
+  
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(7);
+  pdf.text('Ani matshir/a ki hapratim shemasarti betofes ze heinam mele\'im venechonim.', pageWidth - margin - 5, y + 10, { align: 'right' });
+  pdf.text('Yadua li ki hashmata o mesirat pratim lo nechonim heina avera al pkudat mas hachnasa.', pageWidth - margin - 5, y + 14, { align: 'right' });
+  pdf.text('Ani mitchayev/et lehodia lemaasik al kol shinui bepratai toch shavua yamim mitaarich hashinui.', pageWidth - margin - 5, y + 18, { align: 'right' });
+  y += 28;
+  
+  pdf.setFontSize(9);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('CHATIMA DIGITALIT:', pageWidth - margin - 2, y, { align: 'right' });
+  y += 5;
+  
+  const signatureImg = canvas.toDataURL('image/png');
+  const sigBoxW = 70;
+  const sigBoxH = 30;
+  const signatureX = pageWidth - margin - sigBoxW;
+  
+  pdf.setDrawColor(0);
+  pdf.setFillColor(255, 255, 255);
+  pdf.rect(signatureX, y, sigBoxW, sigBoxH, 'FD');
+  pdf.addImage(signatureImg, 'PNG', signatureX + 2, y + 2, sigBoxW - 4, sigBoxH - 4);
+  
+  y += sigBoxH + 5;
+  
+  const sigDate = document.getElementById('signatureDate').value;
+  const timestamp = new Date().toISOString();
+  
+  pdf.setFontSize(8);
+  pdf.setFont('Helvetica', 'normal');
+  pdf.text('Taarich Chatima: ' + formatHebrewDate(sigDate), pageWidth - margin - 2, y, { align: 'right' });
+  y += 5;
+  pdf.setFontSize(7);
+  pdf.setTextColor(80);
+  pdf.text('Chatima Digitalit - Timestamp: ' + timestamp, pageWidth - margin - 2, y, { align: 'right' });
+  y += 4;
+  pdf.text('Beteum Takanot Rashut Hamisim Lechatima Electronit - Siman 6 Lepikodat Mas Hachnasa', pageWidth - margin - 2, y, { align: 'right' });
   
   y += 15;
+  pdf.setDrawColor(150);
+  pdf.line(margin, y, pageWidth - margin, y);
+  y += 8;
+  
+  pdf.setFontSize(8);
+  pdf.setTextColor(0);
+  pdf.setFont('Helvetica', 'bold');
+  pdf.text('LEMILUI AL YEDEI HAMAASIK BILVAD:', pageWidth - margin - 2, y, { align: 'right' });
+  y += 6;
+  
+  pdf.setFont('Helvetica', 'normal');
+  pdf.setFontSize(7);
+  pdf.rect(margin, y, contentWidth, 20);
+  pdf.text('Taarich Kablat Hatofes: _____________', pageWidth - margin - 5, y + 5, { align: 'right' });
+  pdf.text('Shem Memale Hatofes: _____________', pageWidth - margin - 5, y + 10, { align: 'right' });
+  pdf.text('Chatima: _____________', pageWidth - margin - 5, y + 15, { align: 'right' });
+  
+  y += 30;
   pdf.setDrawColor(200);
   pdf.line(margin, y, pageWidth - margin, y);
   y += 5;
-  pdf.setFontSize(7);
-  pdf.setTextColor(120);
-  pdf.text('Tofes 101 - Meudkan 11.2025 - Agaf Bachir Technologiot Digitaliot Umeda, Rashut Hamisim', pageWidth / 2, y, { align: 'center' });
+  pdf.setFontSize(6);
+  pdf.setTextColor(100);
+  pdf.text('Tofes 101 - Meudkan 01/2026 - Rashut Hamisim BeIsrael', pageWidth / 2, y, { align: 'center' });
+  pdf.text('Mufak Beeemtsaut Maarechet Digitali - Tasiyeda - Taasiya Lemaan Chinuch Mitkadem', pageWidth / 2, y + 3, { align: 'center' });
   
-  const fileName = '101_' + taxYear + '_' + (idNum || 'unsigned') + '.pdf';
+  const fileName = 'Tofes_101_' + taxYear + '_' + (idNum || 'unsigned') + '.pdf';
   pdf.save(fileName);
 }
 
