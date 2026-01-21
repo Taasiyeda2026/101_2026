@@ -121,6 +121,21 @@ body {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+.form-group input[readonly] {
+  background: #e9ecef;
+  color: #495057;
+  cursor: not-allowed;
+}
+
+.employer-fixed {
+  background: #e8f4f8;
+  border-right-color: #17a2b8;
+}
+
+.employer-fixed .section-title .icon {
+  background: #17a2b8;
+}
+
 .radio-group {
   display: flex;
   flex-wrap: wrap;
@@ -409,27 +424,35 @@ body {
     <form id="form101">
       
       <div class="form-step active" id="formStep1">
-        <div class="section">
+        <div class="section employer-fixed">
           <div class="section-title">
             <span class="icon">א</span>
-            פרטי המעסיק
+            פרטי המעסיק (קבוע)
           </div>
           <div class="form-grid">
-            <div class="form-group">
+            <div class="form-group full-width">
               <label>שם המעסיק</label>
-              <input type="text" id="employerName">
+              <input type="text" id="employerName" value="תעשיידע – תעשייה למען חינוך מתקדם ע״ר" readonly>
+            </div>
+            <div class="form-group">
+              <label>מספר תיק ניכויים / ח.פ / עמותה</label>
+              <input type="text" id="employerTikNikuyim" value="580210094" readonly>
             </div>
             <div class="form-group">
               <label>כתובת</label>
-              <input type="text" id="employerAddress">
+              <input type="text" id="employerAddress" value="דניאל פריש 3, תל אביב" readonly>
             </div>
             <div class="form-group">
-              <label>מספר טלפון</label>
-              <input type="tel" id="employerPhone">
+              <label>טלפון</label>
+              <input type="tel" id="employerPhone" value="050-8321062" readonly>
             </div>
             <div class="form-group">
-              <label>מספר תיק ניכויים</label>
-              <input type="text" id="employerTikNikuyim" maxlength="9" placeholder="9 ספרות">
+              <label>מייל</label>
+              <input type="email" id="employerEmail" value="office@think.org.il" readonly>
+            </div>
+            <div class="form-group">
+              <label>איש קשר</label>
+              <input type="text" id="employerContact" value="עידן נחום" readonly>
             </div>
           </div>
         </div>
