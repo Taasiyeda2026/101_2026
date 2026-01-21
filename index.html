@@ -822,18 +822,80 @@ body {
         <div class="section">
           <div class="section-title">
             <span class="icon">ט</span>
-            בקשה לתיאום מס
+            אני מבקש/ת תיאום מס מהסיבות הבאות (סמן/י √ בריבוע המתאים)
           </div>
+          
           <div class="checkbox-group">
             <label class="checkbox-option">
-              <input type="checkbox" id="taxAdj1"> 1. לא היתה לי הכנסה מתחילת שנת המס עד לתחילת עבודתי אצל מעסיק זה
+              <input type="checkbox" id="taxAdj1" onchange="toggleTaxAdjSection(1)"> 
+              <strong>1.</strong> לא היתה לי הכנסה מתחילת שנת המס הנוכחית עד לתחילת עבודתי אצל מעסיק זה
             </label>
+            <div id="taxAdj1Details" class="tax-adj-details" style="display: none; margin-right: 30px; margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 8px;">
+              <p style="font-size: 0.85rem; color: #666;">
+                <strong>הערות:</strong><br>
+                1. יש לצרף הוכחה כגון: אישור משטרת הגבולות בגין שהייה בחו"ל, אישור מחלה וכיו"ב. בהעדר הוכחה יש לפנות לפקיד השומה.<br>
+                2. דמי לידה ודמי אבטלה הינם הכנסה חייבת.
+              </p>
+            </div>
+          </div>
+          
+          <div class="checkbox-group" style="margin-top: 15px;">
             <label class="checkbox-option">
-              <input type="checkbox" id="taxAdj2"> 2. יש לי הכנסות נוספות ממשכורת
+              <input type="checkbox" id="taxAdj2" onchange="toggleTaxAdjSection(2)"> 
+              <strong>2.</strong> יש לי הכנסות נוספות ממשכורת<sup>(1)</sup> כמפורט להלן:
             </label>
+            <div id="taxAdj2Details" class="tax-adj-details" style="display: none; margin-top: 15px;">
+              <div id="otherEmployersTable">
+                <table class="employers-table" style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                  <thead>
+                    <tr style="background: #e8e8e8;">
+                      <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">המס שנוכה</th>
+                      <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">ההכנסה החודשית</th>
+                      <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">סוג ההכנסה<br>(עבודה/קצבה/מלגה/אחר)</th>
+                      <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">מספר תיק ניכויים</th>
+                      <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">כתובת</th>
+                      <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">שם המעסיק/משלם המשכורת</th>
+                      <th style="border: 1px solid #ccc; padding: 8px; width: 30px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="otherEmployersBody">
+                    <tr class="employer-row">
+                      <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpTax[]" style="width: 100%; border: none; text-align: center;"></td>
+                      <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpIncome[]" style="width: 100%; border: none; text-align: center;"></td>
+                      <td style="border: 1px solid #ccc; padding: 4px;">
+                        <select name="otherEmpType[]" style="width: 100%; border: none;">
+                          <option value="">בחר</option>
+                          <option value="עבודה">עבודה</option>
+                          <option value="קצבה">קצבה</option>
+                          <option value="מלגה">מלגה</option>
+                          <option value="אחר">אחר</option>
+                        </select>
+                      </td>
+                      <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpTik[]" style="width: 100%; border: none; text-align: center;"></td>
+                      <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpAddress[]" style="width: 100%; border: none;"></td>
+                      <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpName[]" style="width: 100%; border: none;"></td>
+                      <td style="border: 1px solid #ccc; padding: 4px; text-align: center;">
+                        <button type="button" onclick="removeEmployerRow(this)" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 2px 8px; cursor: pointer;">×</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button type="button" onclick="addEmployerRow()" style="margin-top: 10px; background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">+ הוסף מעסיק נוסף</button>
+              </div>
+              <p style="font-size: 0.75rem; color: #666; margin-top: 10px;">
+                <sup>(1)</sup> "עובד" יחיד המקבל משכורות. "מעסיק" אדם המשלם משכורת. "משכורת" הכנסת עבודה, קצבה, מענק עקב פרישה או מוות, מלגה וכיו"ב.
+              </p>
+            </div>
+          </div>
+          
+          <div class="checkbox-group" style="margin-top: 15px;">
             <label class="checkbox-option">
-              <input type="checkbox" id="taxAdj3"> 3. פקיד השומה אישר תיאום לפי אישור מצורף
+              <input type="checkbox" id="taxAdj3" onchange="toggleTaxAdjSection(3)"> 
+              <strong>3.</strong> פקיד השומה אישר תיאום לפי אישור מצורף
             </label>
+            <div id="taxAdj3Details" class="tax-adj-details" style="display: none; margin-right: 30px; margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 8px;">
+              <p style="font-size: 0.85rem; color: #666;">יש לצרף את אישור התיאום שהתקבל מפקיד השומה.</p>
+            </div>
           </div>
         </div>
         
@@ -989,6 +1051,49 @@ function confirmCredit(checkbox, creditName) {
     if (!confirm('האם את/ה בטוח/ה שברצונך לבקש זיכוי עבור: ' + creditName + '?\n\nהצהרה כוזבת עלולה להוביל לעבירה על פקודת מס הכנסה.')) {
       checkbox.checked = false;
     }
+  }
+}
+
+function toggleTaxAdjSection(num) {
+  const checkbox = document.getElementById('taxAdj' + num);
+  const details = document.getElementById('taxAdj' + num + 'Details');
+  if (details) {
+    details.style.display = checkbox.checked ? 'block' : 'none';
+  }
+}
+
+function addEmployerRow() {
+  const tbody = document.getElementById('otherEmployersBody');
+  const newRow = document.createElement('tr');
+  newRow.className = 'employer-row';
+  newRow.innerHTML = `
+    <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpTax[]" style="width: 100%; border: none; text-align: center;"></td>
+    <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpIncome[]" style="width: 100%; border: none; text-align: center;"></td>
+    <td style="border: 1px solid #ccc; padding: 4px;">
+      <select name="otherEmpType[]" style="width: 100%; border: none;">
+        <option value="">בחר</option>
+        <option value="עבודה">עבודה</option>
+        <option value="קצבה">קצבה</option>
+        <option value="מלגה">מלגה</option>
+        <option value="אחר">אחר</option>
+      </select>
+    </td>
+    <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpTik[]" style="width: 100%; border: none; text-align: center;"></td>
+    <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpAddress[]" style="width: 100%; border: none;"></td>
+    <td style="border: 1px solid #ccc; padding: 4px;"><input type="text" name="otherEmpName[]" style="width: 100%; border: none;"></td>
+    <td style="border: 1px solid #ccc; padding: 4px; text-align: center;">
+      <button type="button" onclick="removeEmployerRow(this)" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 2px 8px; cursor: pointer;">×</button>
+    </td>
+  `;
+  tbody.appendChild(newRow);
+}
+
+function removeEmployerRow(btn) {
+  const rows = document.querySelectorAll('#otherEmployersBody .employer-row');
+  if (rows.length > 1) {
+    btn.closest('tr').remove();
+  } else {
+    alert('חייב להישאר לפחות שורה אחת');
   }
 }
 
@@ -1334,11 +1439,52 @@ function generatePDF() {
   const taxAdj3 = document.getElementById('taxAdj3')?.checked || false;
   
   pdf.setFontSize(7);
-  pdf.rect(margin, y, contentWidth, 12);
-  pdf.text(checkbox(taxAdj1) + ' 1. Lo hayta hachnasa mitchilat shnat mas', pageWidth - margin - 5, y + 4, { align: 'right' });
-  pdf.text(checkbox(taxAdj2) + ' 2. Yesh hachnasot nosafot mimaskoret', pageWidth - margin - 5, y + 8, { align: 'right' });
-  pdf.text(checkbox(taxAdj3) + ' 3. Pkid Shoma isher tieum', pageWidth - margin - 5, y + 12, { align: 'right' });
-  y += 15;
+  pdf.rect(margin, y, contentWidth, 8);
+  pdf.text(checkbox(taxAdj1) + ' 1. Lo hayta hachnasa mitchilat shnat mas ad tchilat avoda etsel maasik ze', pageWidth - margin - 5, y + 5, { align: 'right' });
+  y += 8;
+  
+  pdf.rect(margin, y, contentWidth, 8);
+  pdf.text(checkbox(taxAdj2) + ' 2. Yesh li hachnasot nosafot mimaskoret kemefurat lehalan:', pageWidth - margin - 5, y + 5, { align: 'right' });
+  y += 8;
+  
+  if (taxAdj2) {
+    const otherEmpNames = document.querySelectorAll('input[name="otherEmpName[]"]');
+    const otherEmpAddresses = document.querySelectorAll('input[name="otherEmpAddress[]"]');
+    const otherEmpTiks = document.querySelectorAll('input[name="otherEmpTik[]"]');
+    const otherEmpTypes = document.querySelectorAll('select[name="otherEmpType[]"]');
+    const otherEmpIncomes = document.querySelectorAll('input[name="otherEmpIncome[]"]');
+    const otherEmpTaxes = document.querySelectorAll('input[name="otherEmpTax[]"]');
+    
+    const empColW = contentWidth / 6;
+    pdf.rect(margin, y, contentWidth, 6);
+    pdf.setFont('Helvetica', 'bold');
+    pdf.text('Mas Shenucha', margin + empColW * 0.5, y + 4, { align: 'center' });
+    pdf.text('Hachnasa Chodshit', margin + empColW * 1.5, y + 4, { align: 'center' });
+    pdf.text('Sug', margin + empColW * 2.5, y + 4, { align: 'center' });
+    pdf.text('Tik Nikuyim', margin + empColW * 3.5, y + 4, { align: 'center' });
+    pdf.text('Ktovet', margin + empColW * 4.5, y + 4, { align: 'center' });
+    pdf.text('Shem Maasik', margin + empColW * 5.5, y + 4, { align: 'center' });
+    y += 6;
+    
+    pdf.setFont('Helvetica', 'normal');
+    for (let i = 0; i < otherEmpNames.length; i++) {
+      if (otherEmpNames[i].value) {
+        pdf.rect(margin, y, contentWidth, 5);
+        pdf.text(otherEmpTaxes[i]?.value || '', margin + empColW * 0.5, y + 3.5, { align: 'center' });
+        pdf.text(otherEmpIncomes[i]?.value || '', margin + empColW * 1.5, y + 3.5, { align: 'center' });
+        pdf.text(otherEmpTypes[i]?.value || '', margin + empColW * 2.5, y + 3.5, { align: 'center' });
+        pdf.text(otherEmpTiks[i]?.value || '', margin + empColW * 3.5, y + 3.5, { align: 'center' });
+        pdf.text(otherEmpAddresses[i]?.value || '', margin + empColW * 4.5, y + 3.5, { align: 'center' });
+        pdf.text(otherEmpNames[i].value, margin + empColW * 5.5, y + 3.5, { align: 'center' });
+        y += 5;
+      }
+    }
+    y += 2;
+  }
+  
+  pdf.rect(margin, y, contentWidth, 8);
+  pdf.text(checkbox(taxAdj3) + ' 3. Pkid Shoma isher tieum lefi ishur metzuraf', pageWidth - margin - 5, y + 5, { align: 'right' });
+  y += 10;
   
   pdf.addPage();
   y = 10;
