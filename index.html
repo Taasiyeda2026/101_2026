@@ -830,12 +830,17 @@ body {
               <input type="checkbox" id="taxAdj1" onchange="toggleTaxAdjSection(1)"> 
               <strong>1.</strong> לא היתה לי הכנסה מתחילת שנת המס הנוכחית עד לתחילת עבודתי אצל מעסיק זה
             </label>
-            <div id="taxAdj1Details" class="tax-adj-details" style="display: none; margin-right: 30px; margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 8px;">
-              <p style="font-size: 0.85rem; color: #666;">
+            <div id="taxAdj1Details" class="tax-adj-details" style="display: none; margin-right: 30px; margin-top: 10px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+              <p style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
                 <strong>הערות:</strong><br>
                 1. יש לצרף הוכחה כגון: אישור משטרת הגבולות בגין שהייה בחו"ל, אישור מחלה וכיו"ב. בהעדר הוכחה יש לפנות לפקיד השומה.<br>
                 2. דמי לידה ודמי אבטלה הינם הכנסה חייבת.
               </p>
+              <div class="file-upload-section" style="margin-top: 10px; padding: 10px; background: #fff; border: 2px dashed #ccc; border-radius: 8px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">צרף אישור/הוכחה: *</label>
+                <input type="file" id="taxAdj1File" accept=".pdf,.jpg,.jpeg,.png" style="width: 100%;">
+                <p style="font-size: 0.75rem; color: #888; margin-top: 5px;">PDF או תמונה (JPG, PNG)</p>
+              </div>
             </div>
           </div>
           
@@ -893,8 +898,13 @@ body {
               <input type="checkbox" id="taxAdj3" onchange="toggleTaxAdjSection(3)"> 
               <strong>3.</strong> פקיד השומה אישר תיאום לפי אישור מצורף
             </label>
-            <div id="taxAdj3Details" class="tax-adj-details" style="display: none; margin-right: 30px; margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 8px;">
-              <p style="font-size: 0.85rem; color: #666;">יש לצרף את אישור התיאום שהתקבל מפקיד השומה.</p>
+            <div id="taxAdj3Details" class="tax-adj-details" style="display: none; margin-right: 30px; margin-top: 10px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+              <p style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">יש לצרף את אישור התיאום שהתקבל מפקיד השומה.</p>
+              <div class="file-upload-section" style="margin-top: 10px; padding: 10px; background: #fff; border: 2px dashed #ccc; border-radius: 8px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">צרף אישור תיאום מס: *</label>
+                <input type="file" id="taxAdj3File" accept=".pdf,.jpg,.jpeg,.png" style="width: 100%;">
+                <p style="font-size: 0.75rem; color: #888; margin-top: 5px;">PDF או תמונה (JPG, PNG)</p>
+              </div>
             </div>
           </div>
         </div>
