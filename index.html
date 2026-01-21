@@ -1202,19 +1202,25 @@ async function generatePDF() {
     const pages = pdfDoc.getPages();
     const page1 = pages[0];
     const page2 = pages[1];
-    const { width, height } = page1.getSize();
+    const { width: width1, height: height1 } = page1.getSize();
+    const { width: width2, height: height2 } = page2.getSize();
     
     const fontSize = 10;
     const smallFont = 8;
     const checkMark = 'X';
     
+    function getPageHeight(page) {
+      return page === page1 ? height1 : height2;
+    }
+    
     function drawText(page, text, x, y, options = {}) {
       if (!text) return;
       const font = options.bold ? helveticaBold : helveticaFont;
       const size = options.size || fontSize;
+      const pageHeight = getPageHeight(page);
       page.drawText(String(text), {
         x: x,
-        y: height - y,
+        y: pageHeight - y,
         size: size,
         font: font,
         color: rgb(0, 0, 0),
@@ -1222,9 +1228,10 @@ async function generatePDF() {
     }
     
     function drawCheck(page, x, y) {
+      const pageHeight = getPageHeight(page);
       page.drawText(checkMark, {
         x: x,
-        y: height - y,
+        y: pageHeight - y,
         size: 12,
         font: helveticaBold,
         color: rgb(0, 0, 0),
