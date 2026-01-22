@@ -204,6 +204,8 @@
     <h1>כלי כיול - טופס 101</h1>
     <div class="controls">
       <input type="file" id="pdfUpload" accept=".pdf" style="display:none" onchange="uploadPDF(event)">
+      <input type="file" id="imageUpload" accept="image/*" style="display:none" onchange="uploadImage(event)">
+      <button onclick="document.getElementById('imageUpload').click()">העלה תמונה</button>
       <button onclick="document.getElementById('pdfUpload').click()">העלה PDF</button>
       <div class="page-selector">
         <button id="page1Btn" class="active" onclick="showPage(1)">עמוד 1</button>
@@ -356,6 +358,8 @@
       updatePointsList();
     }
     
+    let imageMode = false;
+    
     function uploadPDF(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -364,12 +368,41 @@
         points = { page1: [], page2: [] };
       }
       
+      imageMode = false;
       const reader = new FileReader();
       reader.onload = async function(e) {
         const typedArray = new Uint8Array(e.target.result);
         await loadPDF(typedArray);
       };
       reader.readAsArrayBuffer(file);
+    }
+    
+    function uploadImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (confirm('לנקות את כל הנקודות הקיימות?')) {
+        points = { page1: [], page2: [] };
+      }
+      
+      imageMode = true;
+      pdfDoc = null;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.getElementById('pdfCanvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          renderMarkers();
+          updatePointsList();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
     
     async function renderPage(pageNum) {
