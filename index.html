@@ -1249,66 +1249,66 @@ async function generatePDF() {
       });
     }
     
+    // קואורדינטות מכוילות - A4 (595x842)
     const P1 = {
-      taxYear: { x: 293, y: 66 },
-      employer: { name: { x: 385, y: 104 }, address: { x: 175, y: 104 }, phone: { x: 95, y: 104 }, tik: { x: 35, y: 104 } },
+      taxYear: { x: 228, y: 748 },
+      employer: { name: { x: 539, y: 670 }, address: { x: 413, y: 671 }, phone: { x: 132, y: 670 }, tik: { x: 45, y: 666 } },
       employee: {
-        id: { x: 485, y: 138 }, lastName: { x: 370, y: 138 }, firstName: { x: 260, y: 138 },
-        birthDate: { x: 145, y: 138 }, aliyaDate: { x: 50, y: 138 },
-        passport: { x: 485, y: 160 },
-        street: { x: 350, y: 175 }, houseNum: { x: 260, y: 175 }, city: { x: 155, y: 175 }, zip: { x: 50, y: 175 }
+        id: { x: 444, y: 611 }, lastName: { x: 428, y: 613 }, firstName: { x: 305, y: 615 },
+        birthDate: { x: 126, y: 613 }, aliyaDate: { x: 34, y: 616 },
+        passport: { x: 398, y: 584 },
+        street: { x: 378, y: 591 }, houseNum: { x: 216, y: 589 }, city: { x: 192, y: 591 }, zip: { x: 35, y: 591 }
       },
-      gender: { male: { x: 545, y: 195 }, female: { x: 465, y: 210 } },
+      gender: { male: { x: 532, y: 558 }, female: { x: 533, y: 543 } },
       marital: {
-        single: { x: 500, y: 195 }, married: { x: 440, y: 195 }, divorced: { x: 375, y: 195 },
-        widowed: { x: 418, y: 210 }, separated: { x: 348, y: 210 }
+        single: { x: 493, y: 559 }, married: { x: 433, y: 559 }, divorced: { x: 367, y: 560 },
+        widowed: { x: 492, y: 546 }, separated: { x: 446, y: 546 }
       },
-      resident: { x: 312, y: 195 },
-      kibbutz: { yes: { x: 276, y: 195 }, transferred: { x: 196, y: 195 }, no: { x: 276, y: 210 }, notTransferred: { x: 196, y: 210 } },
-      kupat: { yes: { x: 88, y: 210 }, no: { x: 42, y: 195 } },
-      contact: { email: { x: 400, y: 232 }, phone: { x: 230, y: 232 }, mobile: { x: 70, y: 232 } },
-      children: { startY: 290, rowHeight: 12, name: 420, id: 330, birth: 250, custody: 206, allowance: 193 },
+      resident: { x: 313, y: 545 },
+      kibbutz: { yes: { x: 276, y: 546 }, transferred: { x: 251, y: 557 }, no: { x: 273, y: 560 }, notTransferred: { x: 251, y: 560 } },
+      kupat: { yes: { x: 126, y: 546 }, no: { x: 126, y: 558 } },
+      contact: { email: { x: 373, y: 523 }, phone: { x: 220, y: 523 }, mobile: { x: 48, y: 526 } },
+      children: { startY: 448, rowHeight: 12, name: 517, id: 400, birth: 300, custody: 250, allowance: 200 },
       income: {
-        workStart: { x: 78, y: 265 },
-        monthly: { x: 133, y: 276 }, additional: { x: 133, y: 288 }, partial: { x: 133, y: 300 },
-        daily: { x: 133, y: 312 }, pension: { x: 133, y: 324 }, scholarship: { x: 133, y: 336 }
+        workStart: { x: 36, y: 461 },
+        monthly: { x: 242, y: 479 }, additional: { x: 243, y: 468 }, partial: { x: 242, y: 455 },
+        daily: { x: 242, y: 444 }, pension: { x: 242, y: 432 }, scholarship: { x: 242, y: 420 }
       },
-      otherIncome: { none: { x: 133, y: 368 }, yes: { x: 133, y: 393 } },
+      otherIncome: { none: { x: 242, y: 382 }, yes: { x: 241, y: 358 } },
       spouse: {
-        id: { x: 485, y: 535 }, lastName: { x: 370, y: 535 }, firstName: { x: 260, y: 535 },
-        birthDate: { x: 145, y: 535 }, aliyaDate: { x: 50, y: 535 },
-        noIncome: { x: 255, y: 568 }, work: { x: 88, y: 568 }, other: { x: 42, y: 568 }
+        id: { x: 444, y: 137 }, lastName: { x: 428, y: 138 }, firstName: { x: 307, y: 140 },
+        birthDate: { x: 124, y: 138 }, aliyaDate: { x: 33, y: 139 },
+        noIncome: { x: 255, y: 120 }, work: { x: 180, y: 120 }, other: { x: 100, y: 120 }
       }
     };
     
     const P2 = {
-      employeeId: { x: 480, y: 33 },
+      employeeId: { x: 101, y: 822 },
       credits: {
-        credit1: { x: 547, y: 52 },
-        credit2a: { x: 547, y: 80 },
-        credit2b: { x: 547, y: 100 },
-        credit3: { x: 547, y: 130 },
-        credit4: { x: 547, y: 160 },
-        credit5: { x: 547, y: 188 },
-        credit6: { x: 547, y: 216 },
-        credit7: { x: 547, y: 248 },
-        credit8: { x: 547, y: 278 },
-        credit9: { x: 547, y: 306 },
-        credit10: { x: 547, y: 334 },
-        credit11: { x: 547, y: 362 },
-        credit12: { x: 547, y: 390 },
-        credit13: { x: 547, y: 418 },
-        credit14: { x: 547, y: 446 },
-        credit15: { x: 547, y: 477 },
-        credit16: { x: 547, y: 508 }
+        credit1: { x: 516, y: 797 },
+        credit2: { x: 516, y: 781 },
+        credit3: { x: 516, y: 740 },
+        credit4: { x: 516, y: 714 },
+        credit5: { x: 516, y: 676 },
+        credit6: { x: 516, y: 652 },
+        credit7: { x: 517, y: 628 },
+        credit8: { x: 517, y: 571 },
+        credit9: { x: 516, y: 540 },
+        credit10: { x: 516, y: 503 },
+        credit11: { x: 516, y: 478 },
+        credit12: { x: 516, y: 455 },
+        credit13: { x: 518, y: 439 },
+        credit14: { x: 516, y: 423 },
+        credit15: { x: 516, y: 399 },
+        credit16: { x: 518, y: 385 }
       },
       taxAdj: {
-        option1: { x: 547, y: 545 },
-        option2: { x: 547, y: 588 },
-        option3: { x: 547, y: 698 },
-        empTable: { startY: 625, rowHeight: 13, name: 460, address: 340, tik: 250, type: 175, income: 100, tax: 40 }
+        option1: { x: 518, y: 356 },
+        option2: { x: 517, y: 326 },
+        option3: { x: 534, y: 289 },
+        empTable: { startY: 245, rowHeight: 13, name: 517, address: 400, tik: 300, type: 200, income: 120, tax: 50 }
       },
-      signature: { date: { x: 140, y: 755 }, x: 395, y: 780, width: 110, height: 35 }
+      signature: { date: { x: 184, y: 194 }, x: 75, y: 194, width: 100, height: 30 }
     };
     
     const taxYear = new Date().getFullYear();
