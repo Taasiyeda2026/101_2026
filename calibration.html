@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>כלי כיול - טופס 101</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+    }
+    .header {
+      background: #16213e;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #0f3460;
+    }
+    .header h1 { font-size: 1.4em; color: #e94560; }
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .controls button {
+      background: #0f3460;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .controls button:hover { background: #e94560; }
+    .controls button.active { background: #e94560; }
+    .coords-display {
+      background: #0f3460;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 16px;
+    }
+    .page-selector {
+      display: flex;
+      gap: 10px;
+    }
+    .page-selector button {
+      padding: 8px 20px;
+    }
+    .main-container {
+      display: flex;
+      height: calc(100vh - 70px);
+    }
+    .pdf-container {
+      flex: 1;
+      overflow: auto;
+      position: relative;
+      background: #333;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .pdf-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    #pdfCanvas {
+      display: block;
+      cursor: crosshair;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    .marker {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #e94560;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .marker::after {
+      content: attr(data-name);
+      position: absolute;
+      top: 12px;
+      right: 50%;
+      transform: translateX(50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+    .sidebar {
+      width: 350px;
+      background: #16213e;
+      border-right: 2px solid #0f3460;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 15px;
+      background: #0f3460;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar-header h3 { margin: 0; }
+    .field-input {
+      padding: 15px;
+      border-bottom: 1px solid #0f3460;
+    }
+    .field-input label { display: block; margin-bottom: 5px; }
+    .field-input input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #0f3460;
+      border-radius: 5px;
+      background: #1a1a2e;
+      color: #fff;
+    }
+    .points-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .point-item {
+      background: #1a1a2e;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .point-item .coords { font-family: monospace; color: #e94560; }
+    .point-item button {
+      background: #e94560;
+      border: none;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .export-section {
+      padding: 15px;
+      border-top: 2px solid #0f3460;
+    }
+    .export-section button {
+      width: 100%;
+      padding: 12px;
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .export-section button:hover { background: #c73e54; }
+    #jsonOutput {
+      margin-top: 10px;
+      padding: 10px;
+      background: #1a1a2e;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 11px;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .grid-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .crosshair {
+      position: absolute;
+      pointer-events: none;
+      z-index: 15;
+    }
+    .crosshair-h, .crosshair-v {
+      position: absolute;
+      background: rgba(233, 69, 96, 0.5);
+    }
+    .crosshair-h { width: 100%; height: 1px; left: 0; }
+    .crosshair-v { width: 1px; height: 100%; top: 0; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>כלי כיול - טופס 101</h1>
+    <div class="controls">
+      <div class="page-selector">
+        <button id="page1Btn" class="active" onclick="showPage(1)">עמוד 1</button>
+        <button id="page2Btn" onclick="showPage(2)">עמוד 2</button>
+      </div>
+      <button id="gridBtn" onclick="toggleGrid()">רשת</button>
+      <div class="coords-display">
+        X: <span id="coordX">---</span> | Y: <span id="coordY">---</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-container">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>נקודות שנשמרו</h3>
+        <button onclick="clearAllPoints()">נקה הכל</button>
+      </div>
+      <div class="field-input">
+        <label>שם השדה הבא:</label>
+        <input type="text" id="fieldName" placeholder="לדוגמה: employer.name" onkeypress="if(event.key==='Enter') document.getElementById('pdfCanvas').click()">
+      </div>
+      <div class="points-list" id="pointsList"></div>
+      <div class="export-section">
+        <button onclick="exportJSON()">ייצא כ-JSON</button>
+        <div id="jsonOutput"></div>
+      </div>
+    </div>
+    
+    <div class="pdf-container">
+      <div class="pdf-wrapper" id="pdfWrapper">
+        <canvas id="pdfCanvas"></canvas>
+        <div class="crosshair" id="crosshair" style="display: none;">
+          <div class="crosshair-h" id="crosshairH"></div>
+          <div class="crosshair-v" id="crosshairV"></div>
+        </div>
+        <svg class="grid-overlay" id="gridOverlay" style="display: none;"></svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    
+    let pdfDoc = null;
+    let currentPage = 1;
+    let points = { page1: [], page2: [] };
+    let showGrid = false;
+    const scale = 1.5;
+    
+    async function loadPDF() {
+      const loadingTask = pdfjsLib.getDocument('attached_assets/tofes-101_1769026021658.pdf');
+      pdfDoc = await loadingTask.promise;
+      renderPage(currentPage);
+    }
+    
+    async function renderPage(pageNum) {
+      const page = await pdfDoc.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
+      
+      const canvas = document.getElementById('pdfCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      
+      renderMarkers();
+      if (showGrid) drawGrid();
+    }
+    
+    function showPage(pageNum) {
+      currentPage = pageNum;
+      document.getElementById('page1Btn').classList.toggle('active', pageNum === 1);
+      document.getElementById('page2Btn').classList.toggle('active', pageNum === 2);
+      renderPage(pageNum);
+    }
+    
+    function toggleGrid() {
+      showGrid = !showGrid;
+      document.getElementById('gridBtn').classList.toggle('active', showGrid);
+      const gridOverlay = document.getElementById('gridOverlay');
+      gridOverlay.style.display = showGrid ? 'block' : 'none';
+      if (showGrid) drawGrid();
+    }
+    
+    function drawGrid() {
+      const canvas = document.getElementById('pdfCanvas');
+      const svg = document.getElementById('gridOverlay');
+      svg.setAttribute('width', canvas.width);
+      svg.setAttribute('height', canvas.height);
+      
+      let lines = '';
+      const step = 50;
+      
+      for (let x = 0; x <= canvas.width; x += step) {
+        const realX = Math.round(x / scale);
+        lines += `<line x1="${x}" y1="0" x2="${x}" y2="${canvas.height}" stroke="rgba(233,69,96,0.3)" stroke-width="1"/>`;
+        if (x % 100 === 0) {
+          lines += `<text x="${x+2}" y="12" fill="rgba(233,69,96,0.7)" font-size="10">${realX}</text>`;
+        }
+      }
+      
+      for (let y = 0; y <= canvas.height; y += step) {
+        const realY = Math.round(y / scale);
+        lines += `<line x1="0" y1="${y}" x2="${canvas.width}" y2="${y}" stroke="rgba(233,69,96,0.3)" stroke-width="1"/>`;
+        if (y % 100 === 0) {
+          lines += `<text x="2" y="${y+12}" fill="rgba(233,69,96,0.7)" font-size="10">${realY}</text>`;
+        }
+      }
+      
+      svg.innerHTML = lines;
+    }
+    
+    const canvas = document.getElementById('pdfCanvas');
+    const crosshair = document.getElementById('crosshair');
+    const crosshairH = document.getElementById('crosshairH');
+    const crosshairV = document.getElementById('crosshairV');
+    
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.round((e.clientX - rect.left) / scale);
+      const y = Math.round((e.clientY - rect.top) / scale);
+      
+      document.getElementById('coordX').textContent = x;
+      document.getElementById('coordY').textContent = y;
+      
+      crosshair.style.display = 'block';
+      crosshairH.style.top = (e.clientY - rect.top) + 'px';
+      crosshairV.style.left = (e.clientX - rect.left) + 'px';
+    });
+    
+    canvas.addEventListener('mouseleave', () => {
+      crosshair.style.display = 'none';
+    });
+    
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.round((e.clientX - rect.left) / scale);
+      const y = Math.round((e.clientY - rect.top) / scale);
+      
+      const fieldName = document.getElementById('fieldName').value || `field_${Date.now()}`;
+      const pointsKey = currentPage === 1 ? 'page1' : 'page2';
+      
+      points[pointsKey].push({ name: fieldName, x, y });
+      
+      document.getElementById('fieldName').value = '';
+      renderMarkers();
+      updatePointsList();
+    });
+    
+    function renderMarkers() {
+      document.querySelectorAll('.marker').forEach(m => m.remove());
+      
+      const pointsKey = currentPage === 1 ? 'page1' : 'page2';
+      const wrapper = document.getElementById('pdfWrapper');
+      
+      points[pointsKey].forEach((point, index) => {
+        const marker = document.createElement('div');
+        marker.className = 'marker';
+        marker.style.left = (point.x * scale) + 'px';
+        marker.style.top = (point.y * scale) + 'px';
+        marker.setAttribute('data-name', point.name);
+        wrapper.appendChild(marker);
+      });
+    }
+    
+    function updatePointsList() {
+      const list = document.getElementById('pointsList');
+      const allPoints = [
+        ...points.page1.map((p, i) => ({ ...p, page: 1, index: i })),
+        ...points.page2.map((p, i) => ({ ...p, page: 2, index: i }))
+      ];
+      
+      list.innerHTML = allPoints.map(p => `
+        <div class="point-item">
+          <div>
+            <strong>${p.name}</strong> (עמוד ${p.page})
+            <div class="coords">X: ${p.x}, Y: ${p.y}</div>
+          </div>
+          <button onclick="deletePoint(${p.page}, ${p.index})">מחק</button>
+        </div>
+      `).join('');
+    }
+    
+    function deletePoint(page, index) {
+      const key = page === 1 ? 'page1' : 'page2';
+      points[key].splice(index, 1);
+      renderMarkers();
+      updatePointsList();
+    }
+    
+    function clearAllPoints() {
+      if (confirm('למחוק את כל הנקודות?')) {
+        points = { page1: [], page2: [] };
+        renderMarkers();
+        updatePointsList();
+        document.getElementById('jsonOutput').textContent = '';
+      }
+    }
+    
+    function exportJSON() {
+      const output = {
+        P1: {},
+        P2: {}
+      };
+      
+      points.page1.forEach(p => {
+        output.P1[p.name] = { x: p.x, y: p.y };
+      });
+      
+      points.page2.forEach(p => {
+        output.P2[p.name] = { x: p.x, y: p.y };
+      });
+      
+      const json = JSON.stringify(output, null, 2);
+      document.getElementById('jsonOutput').textContent = json;
+      
+      navigator.clipboard.writeText(json).then(() => {
+        alert('הועתק ללוח!');
+      });
+    }
+    
+    loadPDF();
+  </script>
+</body>
+</html>
