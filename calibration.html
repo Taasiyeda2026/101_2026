@@ -343,7 +343,9 @@
       const options = {
         cMapUrl: cMapUrl,
         cMapPacked: cMapPacked,
-        standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/'
+        standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/',
+        disableFontFace: false,
+        useSystemFonts: true
       };
       
       if (typeof source === 'string') {
@@ -352,10 +354,15 @@
         options.data = source;
       }
       
-      const loadingTask = pdfjsLib.getDocument(options);
-      pdfDoc = await loadingTask.promise;
-      renderPage(currentPage);
-      updatePointsList();
+      try {
+        const loadingTask = pdfjsLib.getDocument(options);
+        pdfDoc = await loadingTask.promise;
+        renderPage(currentPage);
+        updatePointsList();
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+        alert('שגיאה בטעינת ה-PDF. נסה להעלות תמונה במקום.');
+      }
     }
     
     let imageMode = false;
