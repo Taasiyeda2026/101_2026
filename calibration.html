@@ -249,14 +249,96 @@
     
     let pdfDoc = null;
     let currentPage = 1;
-    let points = { page1: [], page2: [] };
     let showGrid = false;
     const scale = 1.5;
+    
+    // נקודות קיימות מהמיפוי הנוכחי
+    let points = {
+      page1: [
+        { name: "taxYear", x: 293, y: 66 },
+        { name: "employer.name", x: 385, y: 104 },
+        { name: "employer.address", x: 175, y: 104 },
+        { name: "employer.phone", x: 95, y: 104 },
+        { name: "employer.tik", x: 35, y: 104 },
+        { name: "employee.id", x: 485, y: 138 },
+        { name: "employee.lastName", x: 370, y: 138 },
+        { name: "employee.firstName", x: 260, y: 138 },
+        { name: "employee.birthDate", x: 145, y: 138 },
+        { name: "employee.aliyaDate", x: 50, y: 138 },
+        { name: "employee.passport", x: 485, y: 160 },
+        { name: "employee.street", x: 350, y: 175 },
+        { name: "employee.houseNum", x: 260, y: 175 },
+        { name: "employee.city", x: 155, y: 175 },
+        { name: "employee.zip", x: 50, y: 175 },
+        { name: "gender.male", x: 545, y: 195 },
+        { name: "gender.female", x: 465, y: 210 },
+        { name: "marital.single", x: 500, y: 195 },
+        { name: "marital.married", x: 440, y: 195 },
+        { name: "marital.divorced", x: 375, y: 195 },
+        { name: "marital.widowed", x: 418, y: 210 },
+        { name: "marital.separated", x: 348, y: 210 },
+        { name: "resident", x: 312, y: 195 },
+        { name: "kibbutz.yes", x: 276, y: 195 },
+        { name: "kibbutz.transferred", x: 196, y: 195 },
+        { name: "kibbutz.no", x: 276, y: 210 },
+        { name: "kibbutz.notTransferred", x: 196, y: 210 },
+        { name: "kupat.yes", x: 88, y: 210 },
+        { name: "kupat.no", x: 42, y: 195 },
+        { name: "contact.email", x: 400, y: 232 },
+        { name: "contact.phone", x: 230, y: 232 },
+        { name: "contact.mobile", x: 70, y: 232 },
+        { name: "children.row1", x: 420, y: 290 },
+        { name: "income.workStart", x: 78, y: 265 },
+        { name: "income.monthly", x: 133, y: 276 },
+        { name: "income.additional", x: 133, y: 288 },
+        { name: "income.partial", x: 133, y: 300 },
+        { name: "income.daily", x: 133, y: 312 },
+        { name: "income.pension", x: 133, y: 324 },
+        { name: "income.scholarship", x: 133, y: 336 },
+        { name: "otherIncome.none", x: 133, y: 368 },
+        { name: "otherIncome.yes", x: 133, y: 393 },
+        { name: "spouse.id", x: 485, y: 535 },
+        { name: "spouse.lastName", x: 370, y: 535 },
+        { name: "spouse.firstName", x: 260, y: 535 },
+        { name: "spouse.birthDate", x: 145, y: 535 },
+        { name: "spouse.aliyaDate", x: 50, y: 535 },
+        { name: "spouse.noIncome", x: 255, y: 568 },
+        { name: "spouse.work", x: 88, y: 568 },
+        { name: "spouse.other", x: 42, y: 568 }
+      ],
+      page2: [
+        { name: "employeeId", x: 480, y: 33 },
+        { name: "credit1", x: 547, y: 52 },
+        { name: "credit2a", x: 547, y: 80 },
+        { name: "credit2b", x: 547, y: 100 },
+        { name: "credit3", x: 547, y: 130 },
+        { name: "credit4", x: 547, y: 160 },
+        { name: "credit5", x: 547, y: 188 },
+        { name: "credit6", x: 547, y: 216 },
+        { name: "credit7", x: 547, y: 248 },
+        { name: "credit8", x: 547, y: 278 },
+        { name: "credit9", x: 547, y: 306 },
+        { name: "credit10", x: 547, y: 334 },
+        { name: "credit11", x: 547, y: 362 },
+        { name: "credit12", x: 547, y: 390 },
+        { name: "credit13", x: 547, y: 418 },
+        { name: "credit14", x: 547, y: 446 },
+        { name: "credit15", x: 547, y: 477 },
+        { name: "credit16", x: 547, y: 508 },
+        { name: "taxAdj.option1", x: 547, y: 545 },
+        { name: "taxAdj.option2", x: 547, y: 588 },
+        { name: "taxAdj.option3", x: 547, y: 698 },
+        { name: "taxAdj.empTable.row1", x: 460, y: 625 },
+        { name: "signature.date", x: 140, y: 755 },
+        { name: "signature.box", x: 395, y: 780 }
+      ]
+    };
     
     async function loadPDF(source) {
       const loadingTask = pdfjsLib.getDocument(source || 'attached_assets/tofes-101_1769026021658.pdf');
       pdfDoc = await loadingTask.promise;
       renderPage(currentPage);
+      updatePointsList();
     }
     
     function uploadPDF(event) {
