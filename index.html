@@ -1249,15 +1249,15 @@ async function generatePDF() {
       });
     }
     
-    // קואורדינטות מכוילות - A4 (595x842)
+    // קואורדינטות מכוילות - A4 (595x842) - Y מהחלק העליון
     const P1 = {
-      taxYear: { x: 228, y: 748 },
-      employer: { name: { x: 539, y: 670 }, address: { x: 413, y: 671 }, phone: { x: 132, y: 670 }, tik: { x: 45, y: 666 } },
+      taxYear: { x: 228, y: 93 },
+      employer: { name: { x: 536, y: 172 }, address: { x: 406, y: 172 }, phone: { x: 204, y: 174 }, tik: { x: 34, y: 174 } },
       employee: {
-        id: { x: 444, y: 611 }, lastName: { x: 428, y: 613 }, firstName: { x: 305, y: 615 },
-        birthDate: { x: 126, y: 613 }, aliyaDate: { x: 34, y: 616 },
-        passport: { x: 398, y: 584 },
-        street: { x: 378, y: 591 }, houseNum: { x: 216, y: 589 }, city: { x: 192, y: 591 }, zip: { x: 35, y: 591 }
+        id: { x: 534, y: 229 }, lastName: { x: 433, y: 227 }, firstName: { x: 307, y: 228 },
+        birthDate: { x: 124, y: 229 }, aliyaDate: { x: 34, y: 229 },
+        passport: { x: 398, y: 260 },
+        street: { x: 378, y: 250 }, houseNum: { x: 216, y: 250 }, city: { x: 192, y: 250 }, zip: { x: 35, y: 250 }
       },
       gender: { male: { x: 532, y: 558 }, female: { x: 533, y: 543 } },
       marital: {
