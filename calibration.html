@@ -339,6 +339,25 @@
       ]
     };
     
+    async function assertA4(doc) {
+      const page = await doc.getPage(1);
+      const viewport = page.getViewport({ scale: 1 });
+      
+      const width = Math.round(viewport.width);
+      const height = Math.round(viewport.height);
+      
+      // A4 = 595 × 842 pt (portrait)
+      const isA4 =
+        (Math.abs(width - 595) < 5 && Math.abs(height - 842) < 5) ||
+        (Math.abs(width - 842) < 5 && Math.abs(height - 595) < 5);
+      
+      if (!isA4) {
+        throw new Error(`קובץ לא A4 (זוהה: ${width}×${height}). יש להעלות טופס 101 בגודל A4 בלבד`);
+      }
+      
+      return { width, height };
+    }
+    
     async function loadPDF(source) {
       const options = {
         cMapUrl: cMapUrl,
@@ -357,11 +376,14 @@
       try {
         const loadingTask = pdfjsLib.getDocument(options);
         pdfDoc = await loadingTask.promise;
+        
+        await assertA4(pdfDoc);
+        
         renderPage(currentPage);
         updatePointsList();
       } catch (error) {
         console.error('Error loading PDF:', error);
-        alert('שגיאה בטעינת ה-PDF. נסה להעלות תמונה במקום.');
+        alert(error.message || 'שגיאה בטעינת ה-PDF. נסה להעלות תמונה במקום.');
       }
     }
     
