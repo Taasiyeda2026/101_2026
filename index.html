@@ -1219,18 +1219,43 @@ async function generatePDF() {
     const smallFont = 7;
     const checkMark = 'X';
     
-    function reverseHebrew(text) {
+    function isHebrew(char) {
+      const code = char.charCodeAt(0);
+      return code >= 0x0590 && code <= 0x05FF;
+    }
+    
+    function processHebrewText(text) {
       if (!text) return '';
-      return String(text).split('').reverse().join('');
+      const str = String(text);
+      let result = [];
+      let hebrewBuffer = [];
+      
+      for (let i = 0; i < str.length; i++) {
+        const char = str[i];
+        if (isHebrew(char)) {
+          hebrewBuffer.push(char);
+        } else {
+          if (hebrewBuffer.length > 0) {
+            result.push(hebrewBuffer.reverse().join(''));
+            hebrewBuffer = [];
+          }
+          result.push(char);
+        }
+      }
+      if (hebrewBuffer.length > 0) {
+        result.push(hebrewBuffer.reverse().join(''));
+      }
+      return result.reverse().join('');
     }
     
     function drawTextOnPage(page, text, x, y, options = {}) {
       if (!text) return;
       const size = options.size || fontSize;
       const pageHeight = page === page1 ? height1 : height2;
-      const displayText = reverseHebrew(text);
+      const displayText = processHebrewText(text);
+      const textWidth = hebrewFont.widthOfTextAtSize(displayText, size);
       page.drawText(displayText, {
-        x: x,
+        x: x - textWidth,
         y: pageHeight - y,
         size: size,
         font: hebrewFont,
