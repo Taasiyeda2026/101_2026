@@ -247,6 +247,8 @@
 
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const cMapUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/';
+    const cMapPacked = true;
     
     let pdfDoc = null;
     let currentPage = 1;
@@ -336,7 +338,19 @@
     };
     
     async function loadPDF(source) {
-      const loadingTask = pdfjsLib.getDocument(source || 'attached_assets/tofes-101_1769026021658.pdf');
+      const options = {
+        cMapUrl: cMapUrl,
+        cMapPacked: cMapPacked,
+        standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/'
+      };
+      
+      if (typeof source === 'string') {
+        options.url = source;
+      } else {
+        options.data = source;
+      }
+      
+      const loadingTask = pdfjsLib.getDocument(options);
       pdfDoc = await loadingTask.promise;
       renderPage(currentPage);
       updatePointsList();
@@ -525,7 +539,7 @@
       });
     }
     
-    loadPDF();
+    loadPDF('attached_assets/tofes-101_1769026021658.pdf');
   </script>
 </body>
 </html>
