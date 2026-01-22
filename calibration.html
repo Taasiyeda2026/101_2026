@@ -202,6 +202,8 @@
   <div class="header">
     <h1>כלי כיול - טופס 101</h1>
     <div class="controls">
+      <input type="file" id="pdfUpload" accept=".pdf" style="display:none" onchange="uploadPDF(event)">
+      <button onclick="document.getElementById('pdfUpload').click()">העלה PDF</button>
       <div class="page-selector">
         <button id="page1Btn" class="active" onclick="showPage(1)">עמוד 1</button>
         <button id="page2Btn" onclick="showPage(2)">עמוד 2</button>
@@ -251,10 +253,22 @@
     let showGrid = false;
     const scale = 1.5;
     
-    async function loadPDF() {
-      const loadingTask = pdfjsLib.getDocument('attached_assets/tofes-101_1769026021658.pdf');
+    async function loadPDF(source) {
+      const loadingTask = pdfjsLib.getDocument(source || 'attached_assets/tofes-101_1769026021658.pdf');
       pdfDoc = await loadingTask.promise;
       renderPage(currentPage);
+    }
+    
+    function uploadPDF(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const typedArray = new Uint8Array(e.target.result);
+        await loadPDF(typedArray);
+      };
+      reader.readAsArrayBuffer(file);
     }
     
     async function renderPage(pageNum) {
